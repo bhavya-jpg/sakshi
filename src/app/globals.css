@@ -1,21 +1,155 @@
 @import "tailwindcss";
 
+/* ── Sakshi · The Evidence Archive ─────────────────────────────────────────
+   Warm ivory paper, ink-black type, deep forest accent, fine rules.
+   Serif (Newsreader, variable opsz) for headlines; Geist for interface; Geist Mono for evidence. */
+
 :root {
-  --background: #fafaf9;
-  --foreground: #1c1917;
+  --paper: #f4efe4;
+  --paper-2: #ece6d8;
+  --sheet: #fbf8f1;
+  --ink: #15140f;
+  --ink-2: #4a463c;
+  --ink-3: #7c766a;
+  --rule: rgba(21, 20, 15, 0.14);
+  --rule-strong: rgba(21, 20, 15, 0.32);
+  --forest: #1d3b2a;
+  --forest-2: #2f5a41;
+  --forest-tint: #e3e9df;
+  --ochre: #8a5a12;
+  --ochre-tint: #f1e6cf;
+  --oxblood: #7a1f1f;
+  --oxblood-tint: #f1dfda;
+  --signal: #b3261e;
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-sheet: var(--sheet);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-forest: var(--forest);
+  --color-forest-2: var(--forest-2);
+  --color-forest-tint: var(--forest-tint);
+  --color-ochre: var(--ochre);
+  --color-ochre-tint: var(--ochre-tint);
+  --color-oxblood: var(--oxblood);
+  --color-oxblood-tint: var(--oxblood-tint);
+  --color-signal: var(--signal);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-newsreader);
 }
 
+html { background: var(--paper); }
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--paper);
+  color: var(--ink);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
+}
+::selection { background: var(--forest); color: var(--sheet); }
+
+@layer components {
+.mono { font-family: var(--font-geist-mono), ui-monospace, monospace; font-feature-settings: "zero"; }
+.serif { font-family: var(--font-newsreader), Georgia, serif; font-optical-sizing: auto; }
+
+/* Display type: large optical size, tight tracking */
+.display {
+  font-family: var(--font-newsreader), Georgia, serif;
+  font-variation-settings: "opsz" 72;
+  font-weight: 380;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+}
+.kicker {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 
-.mono { font-family: var(--font-geist-mono), ui-monospace, monospace; }
+/* Paper grain: an inline SVG noise, very faint */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 0 0.05 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Links and buttons: an underline that draws in */
+.ink-link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.45s var(--ease);
+}
+.ink-link:hover, .ink-link:focus-visible { background-size: 100% 1px; }
+.ink-link-static { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: var(--rule-strong); }
+.ink-link-static:hover { text-decoration-color: currentColor; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  border: 1px solid var(--ink);
+  padding: 0.7rem 1.1rem;
+  font-size: 0.875rem; font-weight: 500;
+  position: relative; overflow: hidden; isolation: isolate;
+  transition: color 0.4s var(--ease);
+}
+.btn::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: var(--ink);
+  transform: scaleY(0); transform-origin: bottom;
+  transition: transform 0.45s var(--ease);
+}
+.btn:hover, .btn:focus-visible { color: var(--sheet); }
+.btn:hover::before, .btn:focus-visible::before { transform: scaleY(1); }
+.btn .arrow { transition: transform 0.45s var(--ease); }
+.btn:hover .arrow { transform: translateX(4px); }
+.btn-solid { background: var(--ink); color: var(--sheet); }
+.btn-solid::before { background: var(--forest); }
+
+:focus-visible { outline: 2px solid var(--forest); outline-offset: 3px; }
+
+/* ── Motion ──────────────────────────────────────────────────────────────── */
+@keyframes rise { from { transform: translateY(105%); } to { transform: translateY(0); } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+.progress-sweep { animation: sweep 1.1s var(--ease) infinite; }
+
+.line-mask { display: block; overflow: hidden; padding-bottom: 0.06em; }
+.line-mask > span { display: block; animation: rise 1.1s var(--ease) both; }
+.fade-in { animation: fade 1.2s var(--ease) both; }
+
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
+.reveal[data-shown="true"] { opacity: 1; transform: none; }
+
+.draw path, .draw line, .draw polyline, .draw circle, .draw rect { stroke-dasharray: var(--len, 400); stroke-dashoffset: var(--len, 400); }
+.draw[data-shown="true"] path, .draw[data-shown="true"] line, .draw[data-shown="true"] polyline,
+.draw[data-shown="true"] circle, .draw[data-shown="true"] rect { animation: draw 1.6s var(--ease) forwards; animation-delay: var(--d, 0s); }
+
+.scanline { animation: scan 1.6s linear infinite; }
+.caret::after { content: "▍"; animation: blink 1s steps(1) infinite; margin-left: 2px; }
+
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details .details-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.45s var(--ease); }
+details[open] .details-body { grid-template-rows: 1fr; }
+details .chev { transition: transform 0.35s var(--ease); }
+details[open] .chev { transform: rotate(45deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  .reveal { opacity: 1; transform: none; }
+  .draw path, .draw line, .draw polyline, .draw circle, .draw rect { stroke-dashoffset: 0; }
+  .scanline, .progress-sweep { display: none; }
+}
+}

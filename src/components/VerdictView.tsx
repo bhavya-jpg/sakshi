@@ -1,66 +1,105 @@
 import Link from "next/link"
 import { EXPLORER, WITNESSES } from "@/lib/config"
-import type { Verdict } from "@/lib/verdict"
+import type { Verdict, Finding } from "@/lib/verdict"
 import { VERDICT_TEXT } from "@/lib/verdict"
 import { fmtTime, short } from "./format"
-
-const tone = {
-  SERVED: "border-emerald-300 bg-emerald-50 text-emerald-900",
-  REPLACED: "border-amber-300 bg-amber-50 text-amber-900",
-  REMOVED: "border-rose-300 bg-rose-50 text-rose-900",
-  NOT_SEEN: "border-stone-300 bg-stone-100 text-stone-800",
-} as const
 
 export const witnessLabel = (a: string) =>
   WITNESSES.find((w) => w.address.toLowerCase() === a.toLowerCase())?.label ?? short(a, 8)
 
-export function DemoBadge() {
-  return <span className="rounded bg-rose-600 px-1.5 py-0.5 text-[10px] font-bold tracking-wide text-white">DEMO SOURCE</span>
+export function DemoBadge({ className = "" }: { className?: string }) {
+  return (
+    <span className={`mono inline-block whitespace-nowrap bg-signal px-1.5 py-[3px] align-middle text-[9.5px] font-semibold uppercase leading-none tracking-[0.12em] text-white ${className}`}>
+      Demo source
+    </span>
+  )
 }
 
-export function VerdictView({ v }: { v: Verdict }) {
-  const t = VERDICT_TEXT[v.overall]
-  return (
-    <div className="space-y-4">
-      <div className={`rounded-lg border p-4 ${tone[v.overall]}`}>
-        <div className="flex flex-wrap items-baseline gap-x-3">
-          <span className="text-2xl font-semibold">{t.en}</span>
-          <span className="text-lg">{t.hi}</span>
-          {v.witnesses.length > 0 && (
-            <span className="text-sm">
-              · {v.witnesses.length} witness{v.witnesses.length > 1 ? "es" : ""}
-            </span>
-          )}
-        </div>
-        <p className="mt-1 text-sm">{t.note}</p>
-        <p className="mono mt-2 break-all text-xs opacity-75">SHA-256 {v.hash}</p>
-        {v.ignored > 0 && (
-          <p className="mt-2 text-xs">
-            {v.ignored} record(s) of this hash were written by wallets you have not chosen to trust, and were ignored.
-          </p>
-        )}
-      </div>
+const statusTone = {
+  SERVED: { text: "text-forest", rule: "border-forest", tint: "bg-forest-tint", dot: "bg-forest" },
+  REPLACED: { text: "text-ochre", rule: "border-ochre", tint: "bg-ochre-tint", dot: "bg-ochre" },
+  REMOVED: { text: "text-oxblood", rule: "border-oxblood", tint: "bg-oxblood-tint", dot: "bg-oxblood" },
+} as const
 
-      {v.findings.map((f) => (
-        <div key={f.witness + f.urlKey} className="rounded-lg border border-stone-200 bg-white p-4 text-sm">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className={`rounded border px-1.5 py-0.5 text-xs font-semibold ${tone[f.status]}`}>{f.status}</span>
-            {f.sourceTier === "demo" && <DemoBadge />}
-            <span className="text-stone-500">by {witnessLabel(f.witness)}</span>
-          </div>
-          <a href={f.url} className="mono mt-2 block break-all text-stone-900 underline" rel="nofollow noopener" target="_blank">{f.url}</a>
-          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-stone-700">
-            <dt className="text-stone-500">First seen</dt><dd>{fmtTime(f.firstSeen)}</dd>
-            <dt className="text-stone-500">{f.status === "SERVED" ? "Still served as of" : "Last confirmed"}</dt><dd>{fmtTime(f.lastConfirmed)}</dd>
-            {f.endedAt && (<><dt className="text-stone-500">{f.status === "REMOVED" ? "URL gone since" : "Replaced on"}</dt><dd>{fmtTime(f.endedAt)}</dd></>)}
-            {f.replacedBy && (<><dt className="text-stone-500">Now serves</dt><dd className="mono break-all text-xs">{f.replacedBy}</dd></>)}
-          </dl>
-          <div className="mt-3 flex flex-wrap gap-x-4 text-xs">
-            <Link className="underline" href={`/timeline?k=${f.urlKey}`}>Full URL timeline</Link>
-            <a className="underline" href={`${EXPLORER}/address/${f.witness}`} target="_blank" rel="noopener">Witness on explorer</a>
-          </div>
+export function VerdictView({ v }: { v: Verdict }) {
+  if (v.overall === "NOT_SEEN") return <NoMatch v={v} />
+  const t = VERDICT_TEXT[v.overall]
+  const tone = statusTone[v.overall]
+  return (
+    <section aria-live="polite" className={`reveal border-t-2 ${tone.rule} bg-sheet`} data-shown="true">
+      <header className="grid grid-cols-1 gap-4 border-b border-rule p-5 sm:grid-cols-[1fr_auto] sm:p-7">
+        <div>
+          <p className="kicker">Evidence found</p>
+          <h2 className={`serif mt-2 text-[clamp(2.25rem,5vw,3.25rem)] leading-none tracking-[-0.02em] ${tone.text}`}>
+            {t.en} <span className="text-[0.55em] italic text-ink-3">{t.hi}</span>
+          </h2>
+          <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-ink-2">{t.note}</p>
         </div>
-      ))}
-    </div>
+        <div className="mono self-end text-right text-[11px] text-ink-3">
+          <div>{v.findings.length} record{v.findings.length > 1 ? "s" : ""} · {v.witnesses.length} witness{v.witnesses.length > 1 ? "es" : ""}</div>
+        </div>
+      </header>
+      <ol className="divide-y divide-rule">
+        {v.findings.map((f) => <FindingRow key={f.witness + f.urlKey} f={f} />)}
+      </ol>
+      {v.ignored > 0 && (
+        <p className="border-t border-rule px-5 py-3 text-[12px] text-ink-3 sm:px-7">
+          {v.ignored} record(s) of this fingerprint were written by wallets you have not chosen to trust, and were ignored.
+        </p>
+      )}
+    </section>
+  )
+}
+
+function FindingRow({ f }: { f: Finding }) {
+  const tone = statusTone[f.status]
+  return (
+    <li className="grid grid-cols-1 gap-5 p-5 sm:grid-cols-12 sm:p-7">
+      <div className="sm:col-span-3">
+        <span className={`mono inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] ${tone.text}`}>
+          <span className={`h-2 w-2 rounded-full ${tone.dot}`} />{f.status}
+        </span>
+        <p className="mt-2 text-[13px] text-ink-2">by {witnessLabel(f.witness)}</p>
+        {f.sourceTier === "demo" && <DemoBadge className="mt-2" />}
+      </div>
+      <div className="space-y-4 sm:col-span-9">
+        <a href={f.url} className="mono block break-all text-[13px] text-ink ink-link-static" rel="nofollow noopener" target="_blank">{f.url}</a>
+        <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-[13px]">
+          <dt className="kicker pt-0.5">First seen</dt><dd>{fmtTime(f.firstSeen)}</dd>
+          <dt className="kicker pt-0.5">{f.status === "SERVED" ? "Still served as of" : "Last confirmed"}</dt><dd>{fmtTime(f.lastConfirmed)}</dd>
+          {f.endedAt && (<><dt className={`kicker pt-0.5 ${tone.text}`}>{f.status === "REMOVED" ? "URL gone since" : "Replaced on"}</dt><dd>{fmtTime(f.endedAt)}</dd></>)}
+          {f.replacedBy && (<><dt className="kicker pt-0.5">Now serves</dt><dd className="mono break-all text-[12px]">{f.replacedBy}</dd></>)}
+        </dl>
+        <div className="flex flex-wrap gap-x-5 gap-y-1 text-[12px]">
+          <Link className="ink-link-static" href={`/timeline/?k=${f.urlKey}`}>Open the URL timeline →</Link>
+          <a className="ink-link-static text-ink-2" href={`${EXPLORER}/address/${f.witness}`} target="_blank" rel="noopener">Witness wallet on explorer</a>
+        </div>
+      </div>
+    </li>
+  )
+}
+
+function NoMatch({ v }: { v: Verdict }) {
+  const t = VERDICT_TEXT.NOT_SEEN
+  return (
+    <section aria-live="polite" className="border border-dashed border-ink-3 p-5 sm:p-7">
+      <p className="kicker">No evidence either way</p>
+      <h2 className="serif mt-2 text-[clamp(2rem,4.5vw,2.75rem)] leading-none tracking-[-0.02em] text-ink-2">
+        {t.en} <span className="text-[0.55em] italic text-ink-3">{t.hi}</span>
+      </h2>
+      <p className="mt-4 max-w-2xl text-[15px] leading-relaxed">
+        No witness you trust has recorded this exact file. <strong className="font-semibold">This is not evidence that the document is fake.</strong>
+      </p>
+      <ul className="mt-5 grid grid-cols-1 gap-3 text-[13px] text-ink-2 sm:grid-cols-3">
+        <li className="border-t border-rule pt-2">It may never have been witnessed. Witnesses only record the URLs they watch.</li>
+        <li className="border-t border-rule pt-2">It may differ by a single byte: re-saved, compressed, or forwarded through an app that alters files.</li>
+        <li className="border-t border-rule pt-2">Check the publisher&apos;s official website directly before acting on it.</li>
+      </ul>
+      {v.ignored > 0 && (
+        <p className="mt-5 text-[12px] text-ink-3">
+          {v.ignored} record(s) of this fingerprint exist from wallets you have not chosen to trust. They are not counted.
+        </p>
+      )}
+    </section>
   )
 }
