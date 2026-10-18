@@ -31,7 +31,10 @@ export function Verify() {
       setPhase("done")
     } catch (e) {
       setVerdict(null); setPhase("error")
-      setError(`Could not reach Arkiv: ${(e as Error).message.split("\n")[0]}. Your file was not uploaded anywhere.`)
+      const msg = (e as Error).message ?? ""
+      setError(/429|rate|limit/i.test(msg)
+        ? "The public Arkiv RPC is rate-limiting this network right now. Wait a few minutes and try again. Your file was not uploaded anywhere."
+        : `Could not reach Arkiv: ${msg.split("\n")[0]}. Your file was not uploaded anywhere.`)
     }
   }, [])
 
