@@ -68,13 +68,13 @@ export function Verify() {
           onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
           onDragLeave={() => setDrag(false)}
           onDrop={(e) => { e.preventDefault(); setDrag(false); const f = e.dataTransfer.files[0]; if (f) examine(f, f.name, f.lastModified) }}
-          className={`group relative border bg-sheet transition-[border-color,background-color] duration-500 ${drag ? "border-forest bg-forest-tint" : "border-rule-strong hover:border-ink"}`}
+          className={`group relative overflow-hidden rounded-2xl border-2 border-dashed bg-sheet transition-[border-color,background-color,box-shadow] duration-500 ${drag ? "border-forest-2 bg-forest-tint shadow-[0_0_0_6px_rgba(25,169,113,0.12)]" : "border-rule-strong hover:border-ink-3 hover:shadow-[0_12px_32px_-16px_rgba(12,15,14,0.25)]"}`}
         >
           <button type="button" onClick={() => input.current?.click()} disabled={busy}
             className="flex w-full flex-col items-start gap-6 p-6 text-left sm:flex-row sm:items-center sm:p-8">
             <DocGlyph active={drag || busy} />
             <span className="block">
-              <span className="serif block text-[26px] leading-tight tracking-[-0.01em]">
+              <span className="block text-[21px] font-semibold leading-tight tracking-[-0.03em]">
                 {drag ? "Release to examine" : "Drop a notice PDF here"}
               </span>
               <span className="mt-1 block text-[14px] text-ink-2">
@@ -88,11 +88,11 @@ export function Verify() {
         </div>
 
         {/* progress ledger */}
-        <ol className="grid grid-cols-3 border-y border-rule text-[12px]" aria-label="Progress">
+        <ol className="grid grid-cols-3 overflow-hidden rounded-xl border border-rule bg-sheet text-[12px]" aria-label="Progress">
           {["Read file", "Compute SHA-256", "Query Arkiv"].map((label, i) => {
             const state = stepIndex > i ? "done" : stepIndex === i ? (phase === "error" ? "error" : "active") : "todo"
             return (
-              <li key={label} className={`flex items-center gap-2 py-2.5 ${i > 0 ? "border-l border-rule pl-3" : ""}`}>
+              <li key={label} className={`flex items-center gap-2 px-3 py-2.5 ${i > 0 ? "border-l border-rule" : ""}`}>
                 <span className={`mono text-[10px] ${state === "done" ? "text-forest" : state === "active" ? "text-ink" : state === "error" ? "text-oxblood" : "text-ink-3"}`}>
                   {state === "done" ? "✓" : state === "error" ? "✕" : `0${i + 1}`}
                 </span>
@@ -105,8 +105,8 @@ export function Verify() {
 
         {/* file record */}
         {file && (
-          <section className="reveal" data-shown="true" aria-label="File examined">
-            <div className="flex items-baseline justify-between gap-4 border-b border-ink pb-2">
+          <section className="reveal card p-5 sm:p-6" data-shown="true" aria-label="File examined">
+            <div className="flex items-baseline justify-between gap-4 border-b border-rule pb-2">
               <h2 className="kicker text-ink!">The file</h2>
               <CopyHash hash={file.hash} />
             </div>
@@ -134,9 +134,9 @@ export function Verify() {
       {/* ── Sidebar: trust + samples ── */}
       <aside className="space-y-10 lg:col-span-4 lg:col-start-9">
         <fieldset>
-          <legend className="kicker text-ink! border-b border-ink pb-2 w-full">Witnesses you trust</legend>
+          <legend className="kicker text-ink! border-b border-rule pb-2 w-full">Witnesses you trust</legend>
           <p className="mt-3 text-[13px] text-ink-2">Only records created by these wallets are counted. Trust comes from the immutable creator of each record.</p>
-          <div className="mt-4 divide-y divide-rule border-y border-rule">
+          <div className="card mt-4 divide-y divide-rule px-4">
             {WITNESSES.map((w) => (
               <label key={w.address} className="flex cursor-pointer items-start gap-3 py-3 text-[13px]">
                 <input type="checkbox" className="mt-0.5 accent-forest" checked={trusted.includes(w.address)} onChange={() => toggle(w.address)} />
@@ -150,9 +150,9 @@ export function Verify() {
         </fieldset>
 
         <section>
-          <h2 className="kicker text-ink! flex items-center justify-between border-b border-ink pb-2">Specimens <DemoBadge /></h2>
+          <h2 className="kicker text-ink! flex items-center justify-between border-b border-rule pb-2">Specimens <DemoBadge /></h2>
           <p className="mt-3 text-[13px] text-ink-2">Synthetic notices from the demonstration board. They are not real government documents.</p>
-          <ul className="mt-4 divide-y divide-rule border-y border-rule">
+          <ul className="card mt-4 divide-y divide-rule px-4">
             {SAMPLES.map((s) => (
               <li key={s.file} className="flex items-center justify-between gap-3 py-3">
                 <span className="min-w-0">

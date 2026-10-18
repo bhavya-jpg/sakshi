@@ -79,7 +79,15 @@ Shortly before 00:15 IST on 19 Oct, the team received 10 test GLM on `0xCB16Ca34
 - Run 2 (board phase 2, about 2 min later): 2 creates (`changed`, `gone`) + 1 run + 1 extension in one tx ([`0x6969…c519`](https://tiramisu.explorer.arkiv.network/tx/0x6969dab4b65b72853304c36fe7679007cd5f2c4aa5bdc06ff9e24342232fc519)).
 - **Pitfall we designed around:** an extension reverts if the new expiry is not later than the current one, and one revert fails the whole batch. `witness.ts` therefore only adds an extension when `currentBlock + 30 days` exceeds the entity's `expiresAt`. Here notice 1's `seen` (created at block 749695, expiring 2045695) was extended to 2045749 in run 2 at block 749749: only +54 blocks, because a fixed-length extension re-anchors at the current block. It went through. Gas used: run 1 = 519,168, run 2 = 397,256.
 
-### 11. Explorer URL patterns
+### 11. Per-IP query quota: easy to exhaust, and the SDK just retries into it
+- **Surface:** public Tiramisu RPC, `arkiv_query`
+- **What we saw (19 Oct, about 00:55 to 01:05 IST):** while running browser QA of our landing page (about 15 page loads in 2 minutes, each issuing several queries), the RPC began answering `arkiv_query` with HTTP 429. The response header read `ratelimit: limit=10000, remaining=0, reset=1079`, so the query budget for our IP was gone for about 18 minutes. Plain calls like `eth_blockNumber` still succeeded under a separate budget (`limit=600 … reset≈20`).
+- **Expected:** the quota and the cost of a query are documented, so an app can budget for them. The *Access Keys* page says keys raise limits and carry "a monthly quota measured in cost units", but not what a query costs or what the anonymous limits are.
+- **SDK behaviour:** with viem's `http({ retryCount: 5 })`, a 429 with a 1079 s reset is retried with backoff and then fails anyway; the page just waits. Exposing `Retry-After`/`reset` through the SDK error would let apps show "rate-limited, try again in N min".
+- **What we changed:** the landing page went from about 18 queries per load to 3 (one shared snapshot; the hero demo computes verdicts from it with the same pure function as `/verify`). We select only the fields we read (`select({ key, creator, createdAt, expiresAt, attributes, payload })`), cache the snapshot for 2 minutes in `sessionStorage`, and pause the block poller in hidden tabs.
+- **Repro:** run many `select().where(eq("project", str("sakshi-v1"))).fetch()` calls from one IP in a short burst (we did it with about 15 page loads of an earlier build of our landing page) and read the `ratelimit` response header on the 429. We did not measure the per-query `Arkiv-Cost`, because our budget was already at 0.
+
+### 12. Explorer URL patterns
 `https://tiramisu.explorer.arkiv.network/tx/<hash>` and `/address/<addr>` both return 200. These are the patterns we link to from the app.
 
 ## Not tested

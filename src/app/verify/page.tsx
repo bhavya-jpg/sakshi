@@ -3,7 +3,7 @@ import { Verify } from "@/components/Verify"
 export default function VerifyPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 pt-12 sm:px-8 sm:pt-16">
-      <header className="grid grid-cols-1 gap-6 border-b border-ink pb-8 lg:grid-cols-12">
+      <header className="grid grid-cols-1 gap-6 border-b border-rule pb-8 lg:grid-cols-12">
         <div className="lg:col-span-7">
           <p className="kicker fade-in">Nº 01 · Verify</p>
           <h1 className="display mt-4 text-[clamp(2.75rem,7vw,5.5rem)]">

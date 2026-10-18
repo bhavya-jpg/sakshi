@@ -42,7 +42,7 @@ export default function How() {
         </h1>
       </header>
 
-      <div className="divide-y divide-rule border-y border-ink">
+      <div className="divide-y divide-rule border-y border-rule">
         {sections.map((s) => (
           <Reveal key={s.n} className="reveal grid grid-cols-1 gap-4 py-10 lg:grid-cols-12">
             <p className="kicker lg:col-span-1">{s.n}</p>
@@ -70,7 +70,7 @@ export default function How() {
         </Reveal>
       </section>
 
-      <section className="mt-20 border-t border-ink pt-5">
+      <section className="mt-20 border-t border-rule pt-5">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <h2 className="kicker text-ink! lg:col-span-3">Witness wallets</h2>
           <ul className="divide-y divide-rule border-y border-rule lg:col-span-9">

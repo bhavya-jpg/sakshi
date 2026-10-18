@@ -62,7 +62,7 @@ export function Timeline() {
 
   return (
     <div className="space-y-12">
-      <form className="border-b border-ink" onSubmit={(e) => { e.preventDefault(); if (input.trim()) router.push(`/timeline/?u=${encodeURIComponent(input.trim())}`) }}>
+      <form className="border-b border-rule" onSubmit={(e) => { e.preventDefault(); if (input.trim()) router.push(`/timeline/?u=${encodeURIComponent(input.trim())}`) }}>
         <label htmlFor="u" className="kicker">Notice URL</label>
         <div className="flex flex-col gap-3 pb-3 pt-2 sm:flex-row sm:items-end">
           <input id="u" value={input} onChange={(e) => setInput(e.target.value)} placeholder="https://example.gov.in/notice.pdf" inputMode="url" autoComplete="off" spellCheck={false}

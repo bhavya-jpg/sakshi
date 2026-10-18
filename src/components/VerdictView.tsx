@@ -26,11 +26,11 @@ export function VerdictView({ v }: { v: Verdict }) {
   const t = VERDICT_TEXT[v.overall]
   const tone = statusTone[v.overall]
   return (
-    <section aria-live="polite" className={`reveal border-t-2 ${tone.rule} bg-sheet`} data-shown="true">
+    <section aria-live="polite" className={`reveal fade-in overflow-hidden rounded-2xl border border-rule border-t-4 ${tone.rule} bg-sheet shadow-[0_20px_50px_-30px_rgba(12,15,14,0.35)]`} data-shown="true">
       <header className="grid grid-cols-1 gap-4 border-b border-rule p-5 sm:grid-cols-[1fr_auto] sm:p-7">
         <div>
           <p className="kicker">Evidence found</p>
-          <h2 className={`serif mt-2 text-[clamp(2.25rem,5vw,3.25rem)] leading-none tracking-[-0.02em] ${tone.text}`}>
+          <h2 className={`mt-2 text-[clamp(2rem,4.5vw,2.9rem)] font-semibold leading-none tracking-[-0.045em] ${tone.text}`}>
             {t.en} <span className="text-[0.55em] italic text-ink-3">{t.hi}</span>
           </h2>
           <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-ink-2">{t.note}</p>
@@ -82,9 +82,9 @@ function FindingRow({ f }: { f: Finding }) {
 function NoMatch({ v }: { v: Verdict }) {
   const t = VERDICT_TEXT.NOT_SEEN
   return (
-    <section aria-live="polite" className="border border-dashed border-ink-3 p-5 sm:p-7">
+    <section aria-live="polite" className="fade-in rounded-2xl border-2 border-dashed border-ink-3/50 bg-paper p-5 sm:p-7">
       <p className="kicker">No evidence either way</p>
-      <h2 className="serif mt-2 text-[clamp(2rem,4.5vw,2.75rem)] leading-none tracking-[-0.02em] text-ink-2">
+      <h2 className="mt-2 text-[clamp(1.9rem,4.2vw,2.6rem)] font-semibold leading-none tracking-[-0.045em] text-ink-2">
         {t.en} <span className="text-[0.55em] italic text-ink-3">{t.hi}</span>
       </h2>
       <p className="mt-4 max-w-2xl text-[15px] leading-relaxed">

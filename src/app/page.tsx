@@ -1,123 +1,205 @@
 import Link from "next/link"
+import { Bento } from "@/components/landing/Bento"
+import { FlowDiagram } from "@/components/landing/FlowDiagram"
+import { HeroDemo } from "@/components/landing/HeroDemo"
+import { LiveStats, RecordFeed } from "@/components/landing/Live"
 import { Reveal } from "@/components/Reveal"
-import { Specimen } from "@/components/Specimen"
 
-const steps = [
-  {
-    n: "I", title: "Document", kicker: "On your device",
-    body: "You hold a PDF that someone forwarded to you. It never leaves your device.",
-    detail: "notice.pdf · 2.3 KB",
-  },
-  {
-    n: "II", title: "SHA-256", kicker: "A fingerprint",
-    body: "Your browser computes the file's SHA-256. Change one byte of the file and the fingerprint is completely different.",
-    detail: "0x1a89d92e…6c5a",
-  },
-  {
-    n: "III", title: "Arkiv query", kicker: "The public record",
-    body: "The fingerprint is looked up on Arkiv, the Web3 database, where independent witnesses record which file each notice URL served.",
-    detail: "doc_sha256 = bytes32(h)",
-  },
-  {
-    n: "IV", title: "Observation history", kicker: "What was seen",
-    body: "You see who recorded the file, at which URL and when, and whether that URL later changed or went dark.",
-    detail: "seen → changed → gone",
-  },
+const Check = () => (
+  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 text-forest-2" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><path d="M3 8.5l3 3 7-7" /></svg>
+)
+
+const problems = [
+  { n: "01", t: "Pages change quietly", d: "A deadline moves or a fee changes, and the old version is simply replaced at the same URL." },
+  { n: "02", t: "Files disappear", d: "Notices are withdrawn or sites go down, exactly when someone needs to prove what was said." },
+  { n: "03", t: "Archives can be blocked", d: "India blocked the Wayback Machine in 2017. One operator is one point of failure." },
+]
+
+const verdicts = [
+  { k: "Served", hi: "उपलब्ध", c: "text-forest", dot: "bg-forest-2", d: "A trusted witness saw this exact file at the URL and has not seen it change." },
+  { k: "Replaced", hi: "बदला गया", c: "text-ochre", dot: "bg-[#e0a33a]", d: "This file was served, then the same URL started serving a different one." },
+  { k: "Removed", hi: "हटाया गया", c: "text-oxblood", dot: "bg-oxblood", d: "This file was served, then the URL stopped serving anything." },
+  { k: "No matching record", hi: "कोई रिकॉर्ड नहीं", c: "text-ink-2", dot: "border border-ink-3", d: "No trusted witness recorded it. Not evidence of a fake. Check the official source." },
+]
+
+const faq = [
+  ["Does Sakshi tell me if a document is fake?", "No. It tells you what independent witnesses recorded: whether this exact file was served by a URL, and when. A missing record only means nobody you trust recorded it."],
+  ["Is my PDF uploaded anywhere?", "No. Your browser computes the SHA-256 locally and sends only that fingerprint in a public query. The file never leaves your device."],
+  ["Who are the witnesses?", "Anyone who runs the open-source witness with their own wallet. In this hackathon build, the one active witness is operated by the Sakshi team, and you can untick it."],
+  ["Why Arkiv instead of a normal database?", "Records are readonly, timestamped by the chain, attributed to the wallet that wrote them, and queryable by anyone without our server. We cannot quietly edit or delete them."],
+  ["Is the demo board a real government site?", "No. It is a clearly labelled mock publisher with synthetic notices, so anyone can reproduce a change and a removal end to end."],
 ]
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-8">
+    <>
       {/* ── Hero ── */}
-      <section className="grid grid-cols-1 gap-14 pb-20 pt-12 sm:pt-16 lg:grid-cols-12 lg:gap-8 lg:pb-28">
-        <div className="lg:col-span-7">
-          <p className="kicker fade-in">Nº 01 · Evidence, not assertion</p>
-          <h1 className="display mt-6 text-[clamp(3.4rem,10vw,8.25rem)]">
-            <span className="line-mask"><span>The truth</span></span>
-            <span className="line-mask"><span style={{ animationDelay: "120ms" }}>leaves a <em className="font-[340] italic text-forest">trace.</em></span></span>
-          </h1>
-          <div className="fade-in mt-10 grid grid-cols-1 gap-8 sm:grid-cols-[1fr_auto] sm:items-end" style={{ animationDelay: "450ms" }}>
-            <p className="max-w-md text-[17px] leading-relaxed text-ink-2">
-              Notices get forwarded as PDFs, and the pages that published them change or vanish. Sakshi checks a document
-              against observations that independent witnesses recorded: which exact file a notice URL served, and when.
+      <section className="relative -mt-16 overflow-hidden bg-night pb-24 pt-32 text-white sm:pt-36">
+        <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
+        <div className="glow pointer-events-none absolute inset-0" aria-hidden />
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <Link href="/how/" className="fade-in inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 py-1 pl-1.5 pr-3 text-[12.5px] text-white/75 hover:border-white/25">
+              <span className="mono rounded-full bg-forest-2/15 px-2 py-0.5 text-[10.5px] uppercase tracking-[0.1em] text-forest-2">Live</span>
+              Records on Arkiv · Tiramisu testnet <span aria-hidden>→</span>
+            </Link>
+            <h1 className="display mt-7 text-[clamp(2.9rem,7.4vw,5.6rem)]">
+              <span className="line-mask"><span>Proof of what was</span></span>
+              <span className="line-mask"><span style={{ animationDelay: "110ms" }}><em className="text-forest-2">actually</em> published.</span></span>
+            </h1>
+            <p className="fade-in mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-white/65" style={{ animationDelay: "350ms" }}>
+              Check a forwarded notice PDF against independent witness records: which exact file an official URL served, and
+              when it changed or disappeared.
             </p>
+            <div className="fade-in mt-9 flex flex-wrap justify-center gap-3" style={{ animationDelay: "500ms" }}>
+              <Link href="/verify/" className="btn btn-green">Verify a PDF <span className="arrow" aria-hidden>→</span></Link>
+              <Link href="/board/" className="btn btn-ghost-night">See a notice change</Link>
+            </div>
+            <ul className="fade-in mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] text-white/55" style={{ animationDelay: "650ms" }}>
+              {["Nothing uploaded", "Readonly public records", "Open source · MIT", "No server to trust"].map((x) => (
+                <li key={x} className="flex items-center gap-1.5"><Check />{x}</li>
+              ))}
+            </ul>
           </div>
-          <div className="fade-in mt-10 flex flex-wrap items-center gap-4" style={{ animationDelay: "600ms" }}>
-            <Link href="/verify/" className="btn btn-solid">Examine a document <span className="arrow" aria-hidden>→</span></Link>
-            <Link href="/board/" className="btn">Open the demo board</Link>
+          <div className="fade-in mx-auto mt-16 max-w-5xl" style={{ animationDelay: "750ms" }}>
+            <HeroDemo />
           </div>
-        </div>
-        <div className="lg:col-span-5 lg:pt-6">
-          <Specimen />
         </div>
       </section>
 
-      {/* ── Method ── */}
-      <section className="border-t border-ink pt-8" aria-labelledby="method">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-          <Reveal className="reveal lg:col-span-4">
-            <p className="kicker">Nº 02 · The method</p>
-            <h2 id="method" className="serif mt-4 text-[clamp(2rem,4vw,3rem)] leading-[1.02] tracking-[-0.02em]">
-              From a file in your hand to a public history.
-            </h2>
-          </Reveal>
-          <Reveal className="reveal text-[15px] leading-relaxed text-ink-2 lg:col-span-5 lg:col-start-8 lg:pt-10" delay={120}>
-            No upload, no account, no Sakshi server. Your browser does all four steps itself, using the same queries that
-            anyone can run from the command line.
-          </Reveal>
-        </div>
+      {/* ── Live proof strip ── */}
+      <section className="relative mx-auto -mt-10 max-w-6xl px-4 sm:px-8">
+        <LiveStats />
+      </section>
 
-        <div className="relative mt-16">
-          {/* connecting rule, drawn once in view */}
-          <Reveal className="draw pointer-events-none absolute left-0 right-0 top-[7px] hidden md:block">
-            <svg className="h-4 w-full" preserveAspectRatio="none" viewBox="0 0 1000 16" fill="none">
-              <line x1="0" y1="8" x2="1000" y2="8" stroke="var(--ink)" strokeWidth="1" style={{ ["--len" as string]: 1000 }} />
-            </svg>
+      {/* ── Problem ── */}
+      <section className="mx-auto max-w-6xl px-4 pt-28 sm:px-8">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+          <Reveal className="reveal lg:col-span-5">
+            <p className="eyebrow">The problem</p>
+            <h2 className="h2 mt-4">A PDF arrives on WhatsApp. <em className="text-forest">Is it what the board published?</em></h2>
+            <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-2">
+              Recruitment and exam candidates act on forwarded notices. &ldquo;Check the official site&rdquo; only works if the site
+              still shows what it showed before.
+            </p>
           </Reveal>
-        <ol className="relative grid grid-cols-1 gap-y-12 md:grid-cols-4 md:gap-x-8">
-          {steps.map((s, i) => (
-            <Reveal as="li" key={s.n} className="reveal relative pl-6 md:pl-0" delay={i * 140}>
-              <span className="absolute left-0 top-[3px] h-[9px] w-[9px] rounded-full border border-ink bg-paper md:relative md:top-0 md:block" />
-              <span className="absolute bottom-0 left-[4px] top-4 w-px bg-rule md:hidden" aria-hidden />
-              <p className="kicker md:mt-6">{s.n} · {s.kicker}</p>
-              <h3 className="serif mt-2 text-[28px] leading-tight tracking-[-0.015em]">{s.title}</h3>
-              <p className="mt-3 text-[14px] leading-relaxed text-ink-2">{s.body}</p>
-              <p className="mono mt-4 border-t border-rule pt-2 text-[11.5px] text-forest">{s.detail}</p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:col-span-7">
+            {problems.map((p, i) => (
+              <Reveal key={p.n} className="reveal card p-5" delay={i * 100}>
+                <p className="mono text-[11px] text-ink-3">{p.n}</p>
+                <p className="mt-8 text-[17px] font-semibold tracking-[-0.025em]">{p.t}</p>
+                <p className="mt-2 text-[14px] leading-relaxed text-ink-2">{p.d}</p>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── How it works ── */}
+      <section id="how" className="relative mt-28 border-y border-rule bg-sheet py-24">
+        <div className="grid-bg-light pointer-events-none absolute inset-0" aria-hidden />
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-8">
+          <Reveal className="reveal mx-auto max-w-2xl text-center">
+            <p className="eyebrow">How it works</p>
+            <h2 className="h2 mt-4">Witnesses write. <em className="text-forest">Anyone reads.</em></h2>
+            <p className="mt-4 text-[16px] text-ink-2">Two independent paths meet at one public record.</p>
+          </Reveal>
+          <Reveal className="reveal mt-14"><FlowDiagram /></Reveal>
+          <div className="mt-12 grid grid-cols-1 gap-6 text-[14px] sm:grid-cols-3">
+            {[
+              ["Witness runs", "Fetch each notice URL, hash the bytes, compare with its last record, write one atomic batch."],
+              ["Arkiv keeps it", "Readonly entities with the URL, hash, fetch time and HTTP status, attributed to the witness wallet."],
+              ["You check", "Your browser hashes your copy and asks Arkiv who saw that exact file, where, and when."],
+            ].map(([t, d], i) => (
+              <Reveal key={t} className="reveal flex gap-4" delay={i * 100}>
+                <span className="mono flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink text-[12px] text-white">{i + 1}</span>
+                <div><p className="font-semibold tracking-[-0.02em]">{t}</p><p className="mt-1 leading-relaxed text-ink-2">{d}</p></div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Features ── */}
+      <section className="mx-auto max-w-6xl px-4 pt-28 sm:px-8">
+        <Reveal className="reveal max-w-2xl">
+          <p className="eyebrow">Why you can trust a result</p>
+          <h2 className="h2 mt-4">Built so that <em className="text-forest">nobody</em> has to be taken at their word, including us.</h2>
+        </Reveal>
+        <Reveal className="reveal mt-12"><Bento /></Reveal>
+      </section>
+
+      {/* ── Live record ── */}
+      <section className="mx-auto max-w-6xl px-4 pt-28 sm:px-8">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
+          <Reveal className="reveal lg:col-span-4">
+            <p className="eyebrow"><span className="pulse-dot h-1.5 w-1.5 rounded-full bg-forest-2 text-forest-2" />The public record</p>
+            <h2 className="h2 mt-4">Live from <em className="text-forest">Tiramisu.</em></h2>
+            <p className="mt-4 text-[15px] leading-relaxed text-ink-2">
+              These rows are queried from Arkiv by your browser as this page loads. Each one links to its URL timeline.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/timeline/" className="btn">Open timeline</Link>
+              <a href="https://github.com/bhavya-jpg/sakshi/blob/main/arkiv/schema.md" className="btn">Read the schema</a>
+            </div>
+          </Reveal>
+          <Reveal className="reveal lg:col-span-8" delay={120}><RecordFeed /></Reveal>
+        </div>
+      </section>
+
+      {/* ── Reading a result ── */}
+      <section className="mx-auto max-w-6xl px-4 pt-28 sm:px-8">
+        <Reveal className="reveal max-w-2xl">
+          <p className="eyebrow">Reading a result</p>
+          <h2 className="h2 mt-4">Four answers. <em className="text-forest">None of them guesses.</em></h2>
+        </Reveal>
+        <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {verdicts.map((v, i) => (
+            <Reveal key={v.k} className={`reveal p-5 ${i === 3 ? "rounded-[14px] border border-dashed border-ink-3/60" : "card"}`} delay={i * 90}>
+              <span className={`block h-2.5 w-2.5 rounded-full ${v.dot}`} />
+              <p className={`mt-6 text-[20px] font-semibold tracking-[-0.03em] ${v.c}`}>{v.k}</p>
+              <p className="serif text-[15px] italic text-ink-3">{v.hi}</p>
+              <p className="mt-3 text-[14px] leading-relaxed text-ink-2">{v.d}</p>
             </Reveal>
           ))}
-        </ol>
         </div>
       </section>
 
-      {/* ── What the result means ── */}
-      <section className="mt-28 grid grid-cols-1 gap-12 lg:grid-cols-12" aria-labelledby="meaning">
-        <Reveal className="reveal lg:col-span-3">
-          <p className="kicker">Nº 03 · Reading a result</p>
-          <h2 id="meaning" className="sr-only">What a result means</h2>
-        </Reveal>
-        <Reveal className="reveal border-t border-forest pt-5 lg:col-span-4" delay={80}>
-          <p className="serif text-[26px] leading-snug">A match is a witnessed fact.</p>
-          <p className="mt-3 text-[14px] leading-relaxed text-ink-2">
-            A witness wallet you trust committed, no later than the block its record landed in, that the URL returned a file
-            with exactly this fingerprint. Trust comes from the wallet that created the record, which cannot be forged.
-          </p>
-        </Reveal>
-        <Reveal className="reveal border-t border-dashed border-ink-3 pt-5 lg:col-span-4 lg:col-start-9" delay={180}>
-          <p className="serif text-[26px] leading-snug">Absence is not an accusation.</p>
-          <p className="mt-3 text-[14px] leading-relaxed text-ink-2">
-            No matching record means only that no trusted witness recorded this exact file. It is <em>not</em> evidence that
-            the document is fake: it may never have been witnessed, or it may have been re-saved or compressed. Check the
-            official source.
-          </p>
-        </Reveal>
+      {/* ── FAQ ── */}
+      <section className="mx-auto max-w-6xl px-4 pt-28 sm:px-8">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+          <Reveal className="reveal lg:col-span-4">
+            <p className="eyebrow">Questions</p>
+            <h2 className="h2 mt-4">Plainly <em className="text-forest">answered.</em></h2>
+          </Reveal>
+          <div className="divide-y divide-rule border-y border-rule lg:col-span-8">
+            {faq.map(([q, a]) => (
+              <details key={q} className="group">
+                <summary className="flex items-center justify-between gap-6 py-5 text-[16px] font-medium tracking-[-0.015em]">
+                  {q}<span className="chev mono flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-rule text-[15px]">+</span>
+                </summary>
+                <div className="details-body"><div className="overflow-hidden"><p className="max-w-2xl pb-5 text-[15px] leading-relaxed text-ink-2">{a}</p></div></div>
+              </details>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <Reveal className="reveal mt-28 flex flex-col items-start gap-6 border-y border-rule py-10 sm:flex-row sm:items-center sm:justify-between">
-        <p className="serif max-w-xl text-[clamp(1.6rem,3vw,2.25rem)] leading-tight tracking-[-0.015em]">
-          Hold a notice up to the record.
-        </p>
-        <Link href="/verify/" className="btn btn-solid">Examine a document <span className="arrow" aria-hidden>→</span></Link>
-      </Reveal>
-    </div>
+      {/* ── CTA ── */}
+      <section className="mx-auto max-w-6xl px-4 py-28 sm:px-8">
+        <Reveal className="reveal relative overflow-hidden rounded-3xl bg-night px-6 py-16 text-center text-white sm:px-12">
+          <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
+          <div className="glow pointer-events-none absolute inset-0" aria-hidden />
+          <div className="relative">
+            <h2 className="h2 mx-auto max-w-2xl">Hold a notice up to <em className="text-forest-2">the record.</em></h2>
+            <p className="mx-auto mt-4 max-w-md text-[15px] text-white/60">Drop a PDF. Get an answer in seconds, from data nobody can quietly change.</p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link href="/verify/" className="btn btn-green">Verify a PDF <span className="arrow" aria-hidden>→</span></Link>
+              <a href="https://github.com/bhavya-jpg/sakshi" className="btn btn-ghost-night">Run your own witness</a>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+    </>
   )
 }
