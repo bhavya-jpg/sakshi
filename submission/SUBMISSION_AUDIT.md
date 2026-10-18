@@ -13,7 +13,7 @@ Checked 19 Oct 2026, 02:20–02:35 IST against the canonical rules (Arkiv-Networ
 | `/arkiv/friction.md` | Per surface: expected vs actual, versions, repro | **PASS** | https://github.com/bhavya-jpg/sakshi/blob/main/arkiv/friction.md (200) | none | no |
 | On-chain evidence: creator wallets | Addresses + roles | **PASS** | A `0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa`, B `0x077436BD0DF0A9050e8f6be74ee9dEF58A8E7AdA` (schema.md, DEVFOLIO_ANSWERS Q6) | paste into form | yes |
 | Full transaction references | 64-hex hashes | **PASS** | 6 full hashes in `docs/SUBMISSION.md` and `DEVFOLIO_ANSWERS.md` | none | no |
-| Demo video ≤ 3:00 | MP4 under 180 s | **PASS (file)** | `submission/video/sakshi_demo.mp4`: 165.7 s, 1920×1080, H.264/AAC, decoded end to end, no black frames | upload to YouTube/Drive and link it | **yes** |
+| Demo video ≤ 3:00 | MP4 under 180 s | **PASS (file)** | primary `submission/video2/sakshi_explainer.mp4`: 121.9 s, 1920×1080, H.264/AAC, decoded end to end, no black frames; fallback `submission/video/sakshi_demo.mp4`: 165.7 s | upload to YouTube/Drive and link it | **yes** |
 | Video link accessible to judges | Public/unlisted URL | **NEEDS ACTION** | not uploaded | upload, set Unlisted / anyone-with-link, test logged-out | **yes** |
 | ≥1 track selected | Track(s) on Devfolio | **NEEDS ACTION** | recommendation in `DEVFOLIO_ANSWERS.md` | select tracks in form | **yes** |
 | Indian-nationality condition (Best Indian Use Case) | Declared at registration and submission | **NEEDS ACTION** | answer "Yes" in Q2 if true | confirm and declare | **yes** |

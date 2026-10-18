@@ -1,0 +1,46 @@
+Sakshi explainer: narration (exact text in the final video)
+Voice: Chatterbox TTS (Resemble AI, MIT licence), default voice, exaggeration 0.45, cfg 0.45, seed 7; output carries Resemble's Perth watermark.
+
+[01 hook]
+A notice lands on WhatsApp, as a PDF.
+Is it what the board actually published?
+
+[02 problem]
+Notice pages change quietly. Files get withdrawn.
+And public archives can be blocked. India blocked the Wayback Machine in 2017.
+
+[03 idea]
+Sakshi is a witness.
+It records which exact file a notice URL served, and when.
+
+[04 fingerprint]
+Every file has a fingerprint: its SHA-256 hash.
+Move one deadline, and the fingerprint changes completely.
+
+[05 witness]
+A witness fetches each notice, hashes it, and writes a read-only observation to Arkiv.
+Seen. Changed. Or gone.
+
+[06 arkiv]
+Each record is attributed to the wallet that created it, and placed in a block.
+Nobody, including us, can quietly edit it.
+
+[07 verify]
+To check a PDF, your browser computes its fingerprint locally.
+Then it asks Arkiv who saw that exact file. Nothing is uploaded.
+
+[08 answers]
+There are four answers. Served. Replaced. Removed.
+Or no matching record, which is never proof of a fake.
+
+[09 trust]
+You choose which witnesses to trust.
+Notice one was seen by two witness identities. Untrust one, and it counts one. Untrust both, and there is no match.
+Both identities are run by our team, so they are distinct wallets, not independent organisations.
+
+[10 proof]
+It is live on Arkiv Tiramisu, with six real transactions and two witness wallets.
+And the same check runs from the command line, without our website.
+
+[11 close]
+Sakshi. The truth leaves a trace.

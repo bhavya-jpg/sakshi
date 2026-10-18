@@ -1,0 +1,13 @@
+[
+ {"shot":1,"name":"hook","lines":["A notice lands on WhatsApp, as a PDF.","Is it what the board actually published?"]},
+ {"shot":2,"name":"problem","lines":["Notice pages change quietly. Files get withdrawn.","And public archives can be blocked. India blocked the Wayback Machine in 2017."]},
+ {"shot":3,"name":"idea","lines":["Sakshi is a witness.","It records which exact file a notice URL served, and when."]},
+ {"shot":4,"name":"fingerprint","lines":["Every file has a fingerprint: its SHA-256 hash.","Move one deadline, and the fingerprint changes completely."]},
+ {"shot":5,"name":"witness","lines":["A witness fetches each notice, hashes it, and writes a read-only observation to Arkiv.","Seen. Changed. Or gone."]},
+ {"shot":6,"name":"arkiv","lines":["Each record is attributed to the wallet that created it, and placed in a block.","Nobody, including us, can quietly edit it."]},
+ {"shot":7,"name":"verify","lines":["To check a PDF, your browser computes its fingerprint locally.","Then it asks Arkiv who saw that exact file. Nothing is uploaded."]},
+ {"shot":8,"name":"answers","lines":["There are four answers. Served. Replaced. Removed.","Or no matching record, which is never proof of a fake."]},
+ {"shot":9,"name":"trust","lines":["You choose which witnesses to trust.","Notice one was seen by two witness identities. Untrust one, and it counts one. Untrust both, and there is no match.","Both identities are run by our team, so they are distinct wallets, not independent organisations."]},
+ {"shot":10,"name":"proof","lines":["It is live on Arkiv Tiramisu, with six real transactions and two witness wallets.","And the same check runs from the command line, without our website."]},
+ {"shot":11,"name":"close","lines":["Sakshi. The truth leaves a trace."]}
+]

@@ -18,7 +18,7 @@ Upload `submission/video/sakshi_demo.mp4` frames or screenshots of the live app 
 **Project links**
 - Repo: https://github.com/bhavya-jpg/sakshi
 - Live app: https://bhavya-jpg.github.io/sakshi/
-- Demo video (≤ 3 min): **upload `submission/video/sakshi_demo.mp4` (2:45) to YouTube (Unlisted) or Google Drive (anyone with the link), then paste that link here.** Optionally attach `sakshi_demo.srt` as captions on YouTube.
+- Demo video (≤ 3 min): **upload `submission/video2/sakshi_explainer.mp4` (2:02, motion-graphics explainer, Chatterbox narration) to YouTube (Unlisted) or Google Drive (anyone with the link), then paste that link here.** Captions: `sakshi_explainer.srt`. Fallback/alternative: `submission/video/sakshi_demo.mp4` (2:45, live-app walkthrough).
 
 **The problem it solves** \*
 Indian recruitment, exam and scholarship candidates act on notice PDFs forwarded through WhatsApp and Telegram. "Check the official site" fails when a page has been silently edited, a file withdrawn, or a site is down, and the main public web archive (the Wayback Machine) was blocked in India in 2017. Sakshi lets anyone check, without trusting our server and without uploading the file, whether a witness they trust recorded that exact file at a URL, when it was first seen, and whether the URL later changed or stopped serving it. It never calls a document fake: no record means only that no trusted witness recorded it.

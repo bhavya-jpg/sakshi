@@ -1,0 +1,99 @@
+1
+00:00:01,600 --> 00:00:04,110
+A notice lands on WhatsApp, as a PDF.
+
+2
+00:00:04,410 --> 00:00:06,560
+Is it what the board actually published?
+
+3
+00:00:08,210 --> 00:00:11,240
+Notice pages change quietly. Files get withdrawn.
+
+4
+00:00:11,540 --> 00:00:16,450
+And public archives can be blocked. India
+blocked the Wayback Machine in 2017.
+
+5
+00:00:19,000 --> 00:00:20,550
+Sakshi is a witness.
+
+6
+00:00:20,850 --> 00:00:24,640
+It records which exact file a
+notice URL served, and when.
+
+7
+00:00:26,990 --> 00:00:30,860
+Every file has a fingerprint: its SHA-256 hash.
+
+8
+00:00:31,160 --> 00:00:34,270
+Move one deadline, and the
+fingerprint changes completely.
+
+9
+00:00:38,720 --> 00:00:43,110
+A witness fetches each notice, hashes it, and
+writes a read-only observation to Arkiv.
+
+10
+00:00:43,410 --> 00:00:45,960
+Seen. Changed. Or gone.
+
+11
+00:00:49,410 --> 00:00:53,360
+Each record is attributed to the wallet that
+created it, and placed in a block.
+
+12
+00:00:53,660 --> 00:00:56,730
+Nobody, including us, can quietly edit it.
+
+13
+00:00:59,880 --> 00:01:03,470
+To check a PDF, your browser computes
+its fingerprint locally.
+
+14
+00:01:03,770 --> 00:01:08,240
+Then it asks Arkiv who saw that exact
+file. Nothing is uploaded.
+
+15
+00:01:13,190 --> 00:01:16,820
+There are four answers. Served. Replaced. Removed.
+
+16
+00:01:17,120 --> 00:01:20,470
+Or no matching record, which is
+never proof of a fake.
+
+17
+00:01:23,620 --> 00:01:25,730
+You choose which witnesses to trust.
+
+18
+00:01:26,030 --> 00:01:32,940
+Notice one was seen by two witness identities. Untrust one, and
+it counts one. Untrust both, and there is no match.
+
+19
+00:01:33,240 --> 00:01:39,110
+Both identities are run by our team, so they are
+distinct wallets, not independent organisations.
+
+20
+00:01:42,560 --> 00:01:47,750
+It is live on Arkiv Tiramisu, with six real
+transactions and two witness wallets.
+
+21
+00:01:48,050 --> 00:01:51,680
+And the same check runs from the command
+line, without our website.
+
+22
+00:01:56,030 --> 00:01:58,660
+Sakshi. The truth leaves a trace.

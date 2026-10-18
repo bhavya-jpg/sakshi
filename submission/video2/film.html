@@ -1,0 +1,265 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=block" rel="stylesheet">
+<style>
+/* Sakshi explainer film. One clock: window.seek(t) draws the exact frame for time t (seconds).
+   Palette (from the live site): paper #F6F4F2, sheet #FCFBF9, navy ink #172344, vermillion #E4502F,
+   moss #2C6A50 (served), ochre #A86C12 (replaced), brick #B23A2E (removed). */
+:root{--paper:#f6f4f2;--sheet:#fcfbf9;--ink:#172344;--ink2:#4a546f;--ink3:#868ca0;--rule:rgba(23,35,68,.12);--acc:#e4502f;--moss:#2c6a50;--ochre:#a86c12;--brick:#b23a2e}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--paper);color:var(--ink);font-family:Geist,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"Geist Mono",monospace}.serif{font-family:Newsreader,Georgia,serif}
+#stage{position:absolute;inset:0}
+.abs{position:absolute}
+.card{position:absolute;background:var(--sheet);border:1px solid rgba(23,35,68,.14);border-radius:22px;box-shadow:0 2px 4px rgba(23,35,68,.04),0 40px 80px -40px rgba(23,35,68,.45)}
+.navy{background:#172344;color:#f6f4f2;border-color:rgba(255,255,255,.08)}
+.kick{font:500 16px "Geist Mono";letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+.big{font-weight:600;letter-spacing:-.05em;line-height:.95}
+.big em{font-family:Newsreader;font-weight:400;font-style:italic;letter-spacing:-.02em;color:var(--acc)}
+.chip{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:8px 16px;font:600 15px "Geist Mono";letter-spacing:.1em;text-transform:uppercase}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+#grain{position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .09 0 0 0 0 .13 0 0 0 0 .27 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 85% 75% at 50% 45%,transparent 60%,rgba(23,35,68,.10))}
+#wipe{position:absolute;top:0;bottom:0;background:var(--acc);pointer-events:none}
+#sub{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);max-width:1400px;text-align:center;font:500 27px/1.35 Geist;color:var(--ink);background:rgba(252,251,249,.86);padding:10px 22px;border-radius:12px;box-shadow:0 10px 30px -18px rgba(23,35,68,.4)}
+.shot-n{position:absolute;left:72px;top:58px;font:500 15px "Geist Mono";letter-spacing:.16em;color:var(--ink3)}
+.shot-n b{color:var(--acc);font-weight:500}
+img.proof{position:absolute;border-radius:18px;box-shadow:0 50px 100px -40px rgba(23,35,68,.55);border:1px solid rgba(23,35,68,.14);opacity:0}
+</style></head>
+<body>
+<div id="stage"></div>
+<img class="proof" id="img_verify" src="img/verify-served.png">
+<img class="proof" id="img_explorer" src="img/explorer-b.png">
+<img class="proof" id="img_timeline" src="img/timeline.png">
+<img class="proof" id="img_home" src="img/home.png">
+<div id="wipe"></div><div id="grain"></div><div id="vig"></div><div id="sub" style="display:none"></div>
+<script src="timeline.js"></script>
+<script>
+// ── facts (all real; sources: arkiv/schema.md, docs/SUBMISSION.md, cli_output.txt) ──
+const F = {
+  h1: "1a89d92e6a8fc8430aa495c255b88d2b109fa95736dd2026c226316408566c5a", // demo-notice-2-v1.pdf
+  h2: "cc807160895416f707598ca9c31865c603ccd106ed607146e7990c9c25466e06", // demo-notice-2-v2.pdf
+  A: "0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa", B: "0x077436BD0DF0A9050e8f6be74ee9dEF58A8E7AdA",
+  seenKey: "0x09ab88cd3eb609ee9c9d6758ea6266856277cbe36e4b9ff1107b540d6438745c",
+  tx: [["Preflight · first entity","0xb3aaa9a9aa20b04b1617e1337e244899060a9f6f16c6861c481e5e757efb4f04"],
+       ["Preflight · batch + extension","0x20db0619dbac00452b4e795bc6bb9efad11d9f9ee6e4b920b95b6a96639d4d5b"],
+       ["Witness A · run 1 · 3 × seen","0x7707c7e1c68b65127c5d46b2225be787a19a7faef5af88c1b12fc2f2eec51745"],
+       ["Witness A · run 2 · changed + gone","0x6969dab4b65b72853304c36fe7679007cd5f2c4aa5bdc06ff9e24342232fc519"],
+       ["Fund witness B · 0.01 GLM","0x8ef2278c768cfdaf7ab20a9394f36fb66cda66115af2be88ad3cc1d4bc9fbe85"],
+       ["Witness B · run 1 · seen notice 1","0xbab0f4599b2afc706e640e519d9921d6b9259a88421e17f8c447277f160a9d4f"]],
+};
+// ── math ──
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)), lerp=(a,b,k)=>a+(b-a)*k;
+const eo=x=>1-Math.pow(1-cl(x),3), ex=x=>{x=cl(x);return x===1?1:1-Math.pow(2,-10*x)}, eio=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const spring=(x,z=.55,w=12)=>{if(x<=0)return 0;return 1-Math.exp(-z*w*x)*Math.cos(w*Math.sqrt(1-z*z)*x)};
+const noise=(i,f)=>{let x=(i*374761393+f*668265263)|0;x=(x^(x>>>13))*1274126177|0;return "0123456789abcdef"[(x^(x>>>16))>>>0&15]};
+const short=(h,a=6,b=4)=>h.slice(0,a+2)+"…"+h.slice(-b);
+// helpers that return style strings
+const rise=(u,at,d=.7,dist=40)=>{const k=ex((u-at)/d);return `opacity:${k};transform:translateY(${(1-k)*dist}px)`};
+const pop=(u,at)=>{const k=spring((u-at)*1.4);return `opacity:${cl((u-at)*4)};transform:scale(${lerp(.6,1,k)})`};
+function hexGrid(hash,locked,f,prev,size=40,gap=34){let h=`<div class="mono" style="display:grid;grid-template-columns:repeat(4,auto);gap:4px ${gap}px;font:500 ${size}px/1.4 'Geist Mono';letter-spacing:.02em">`;
+  for(let g=0;g<8;g++){h+="<span>";for(let k=0;k<8;k++){const i=g*8+k;if(i<locked){const d=prev&&hash[i]!==prev[i];h+=d?`<span style="color:var(--acc)">${hash[i]}</span>`:hash[i]}else h+=`<span style="color:rgba(23,35,68,.16)">${noise(i,f)}</span>`}h+="</span>"}return h+"</div>"}
+const eye=(s,open=1,pupil="#e4502f")=>`<svg viewBox="0 0 32 32" width="${s}" height="${s}"><rect x=".5" y=".5" width="31" height="31" rx="9" fill="#172344"/><path d="M5.5 16c2.8-${4.6*open} 6.3-${6.9*open} 10.5-${6.9*open}S23.7 ${16-4.6*open} 26.5 16c-2.8 ${4.6*open}-6.3 ${6.9*open}-10.5 ${6.9*open}S8.3 ${16+4.6*open} 5.5 16Z" stroke="#f6f4f2" stroke-width="1.6" fill="none"/><circle cx="16" cy="16" r="${3.3*open}" fill="${pupil}"/></svg>`;
+// line timing helpers (relative to the shot)
+const L=(S,i)=>S.lines[i]?S.lines[i].start-S.start:0, LE=(S,i)=>S.lines[i]?S.lines[i].end-S.start:0;
+function img(id,style){const e=document.getElementById(id);e.style.cssText=style}
+function hideImgs(){for(const id of ["img_verify","img_explorer","img_timeline","img_home"])document.getElementById(id).style.opacity=0}
+
+// ── shots: each returns HTML for local time u (seconds) within shot S ──
+const SHOTS = {
+hook(u,S){ // a forwarded PDF in a chat, then the question
+  const p=spring(u*1.1,.6,10), q=L(S,1);
+  return `<div class="shot-n"><b>01</b> · THE QUESTION</div>
+  <div class="card" style="left:1150px;top:${lerp(1180,150,p)}px;width:480px;height:800px;border-radius:56px;padding:28px;background:#fff">
+    <div style="height:56px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:14px;font:600 20px Geist"><span class="dot" style="width:38px;height:38px;background:#d8dbe4"></span>Exam updates group</div><div class="mono" style="position:absolute;right:34px;top:40px;font-size:12px;color:var(--ink3)">illustration</div>
+    <div style="margin-top:30px;${rise(u,.6)};background:#eef0f5;border-radius:18px 18px 18px 4px;padding:14px 18px;font:400 19px Geist;width:330px">Forwarded · official notice 👇</div>
+    <div style="margin-top:14px;${rise(u,1.1)};background:#e7f1ea;border-radius:18px 18px 18px 4px;padding:16px;width:360px;display:flex;gap:14px;align-items:center">
+      <svg viewBox="0 0 24 30" width="40" height="50"><path d="M1 1h15l7 7v21H1z" fill="#fff" stroke="#172344" stroke-opacity=".4"/><rect x="4" y="19" width="16" height="6" rx="1" fill="#e4502f"/></svg>
+      <div><div class="mono" style="font-size:17px">demo-notice-2-v1.pdf</div><div style="font-size:15px;color:var(--ink3)">PDF · 2.2 KB</div></div></div>
+    <div style="margin-top:14px;${rise(u,1.7)};background:#eef0f5;border-radius:18px 18px 18px 4px;padding:14px 18px;font:400 19px Geist;width:300px">Last date 30 Nov. Share!</div>
+  </div>
+  <div class="abs" style="left:150px;top:300px;width:920px">
+    <div class="kick" style="${rise(u,.2)}">A forwarded notice</div>
+    <div class="big" style="font-size:118px;margin-top:26px">
+      ${["Is it what","the board","<em>actually</em> published?"].map((w,i)=>`<div style="overflow:hidden;padding-bottom:6px"><div style="transform:translateY(${(1-ex((u-q-i*.16)/.8))*110}%)">${w}</div></div>`).join("")}
+    </div></div>`},
+
+problem(u,S){
+  const l2=L(S,1);
+  const card=(i,at,title,body,x)=>{const k=spring((u-at)*1.2,.5,11);return `<div class="card" style="left:${x}px;top:${lerp(1150,330,k)}px;width:470px;height:430px;padding:36px;transform:rotate(${lerp(8,[-2,1.2,-1][i],k)}deg)">
+      <div class="kick">${["01","02","03"][i]}</div><div style="font:600 36px Geist;letter-spacing:-.03em;margin-top:18px">${title}</div>${body}</div>`};
+  const flip=ex((u-1.9)/.5), stamp=spring((u-3.0)*1.5,.4,12);
+  return `<div class="shot-n"><b>02</b> · THE PROBLEM</div>
+  ${card(0,.2,"Changed quietly",`<div style="margin-top:56px;font:400 24px Geist;color:var(--ink2)">Last date to apply</div>
+     <div style="position:relative;height:70px;margin-top:8px;font:600 54px Geist;letter-spacing:-.03em">
+       <div style="position:absolute;opacity:${1-flip};transform:translateY(${-30*flip}px)">30 November</div>
+       <div style="position:absolute;opacity:${flip};transform:translateY(${30*(1-flip)}px);color:var(--acc)">05 November</div></div>
+     <div class="mono" style="margin-top:40px;font-size:15px;color:var(--ink3)">same URL · different file</div>`,160)}
+  ${card(1,.9,"Withdrawn",`<div class="mono" style="margin-top:56px;font-size:20px;color:var(--ink2)">GET /board/notice-3.pdf</div>
+     <div style="margin-top:22px;font:700 120px 'Geist Mono';color:var(--brick);transform:scale(${lerp(2,1,stamp)}) rotate(-6deg);opacity:${cl((u-3)*5)};transform-origin:left">404</div>`,725)}
+  ${card(2,l2,"Archives blocked",`<div style="margin-top:46px;font:400 26px/1.35 Geist;color:var(--ink2)">India blocked the <b style="color:var(--ink)">Wayback Machine</b></div>
+     <div style="font:600 64px Geist;letter-spacing:-.04em;margin-top:6px;opacity:${cl((u-l2-1.2)*3)}">Aug 2017</div>
+     <div class="mono" style="margin-top:30px;font-size:13px;color:var(--ink3);opacity:${cl((u-l2-1.6)*3)}">Source: The Wire, Aug 2017</div>`,1290)}`},
+
+idea(u,S){
+  const open=eio((u-.3)/.7), l2=L(S,1), k=ex((u-l2)/.8);
+  return `<div class="shot-n"><b>03</b> · THE IDEA</div>
+  <div class="abs" style="left:50%;top:${lerp(330,190,k)}px;transform:translateX(-50%) scale(${lerp(.3,1,spring(u*1.2))});opacity:${cl(u*4)}">${eye(lerp(260,180,k),Math.max(.05,open))}</div>
+  <div class="abs" style="left:0;right:0;top:${lerp(640,420,k)}px;text-align:center">
+    <div class="big" style="font-size:150px;overflow:hidden"><div style="transform:translateY(${(1-ex((u-.6)/.8))*110}%)">Sakshi <span class="serif" style="font-size:80px;font-style:italic;color:var(--ink3);letter-spacing:0">साक्षी</span></div></div>
+    <div style="font:400 italic 54px Newsreader;color:var(--acc);margin-top:14px;${rise(u,1.1)}">a witness for public notices</div></div>
+  <div class="card" style="left:360px;right:360px;top:760px;height:150px;padding:0 44px;display:flex;align-items:center;justify-content:space-between;${rise(u,l2+.2,.8,60)}">
+    <div><div class="kick">notice URL</div><div class="mono" style="font-size:22px;margin-top:8px">/sakshi/board/notice-2.pdf</div></div>
+    <svg width="120" height="20"><line x1="0" y1="10" x2="${110*ex((u-l2-.6)/.8)}" y2="10" stroke="#e4502f" stroke-width="3"/></svg>
+    <div style="opacity:${cl((u-l2-1.2)*3)}"><div class="kick">served file</div><div class="mono" style="font-size:22px;margin-top:8px">sha256 ${short("0x"+F.h1)} · when</div></div></div>`},
+
+fingerprint(u,S){
+  const l2=L(S,1), changed=u>=l2+.8;
+  const cur=changed?F.h2:F.h1, prev=changed?F.h1:null;
+  const locked=!changed?Math.floor(cl((u-.8)/1.8)*64):Math.floor(cl((u-l2-1.0)/1.6)*64);
+  const flip=ex((u-l2-.4)/.5), m=spring((u-.2)*1.2);
+  return `<div class="shot-n"><b>04</b> · THE FINGERPRINT</div>
+  <div class="card" style="left:150px;top:200px;width:560px;height:720px;overflow:hidden;transform:translateX(${lerp(-200,0,m)}px);opacity:${cl(u*3)}">
+    <div style="height:54px;background:var(--acc);color:#fff;font:600 15px 'Geist Mono';letter-spacing:.12em;display:flex;align-items:center;padding:0 34px">DEMO SOURCE · SYNTHETIC NOTICE</div>
+    <div style="padding:44px 40px"><div style="font:600 30px Geist;letter-spacing:-.02em">Field Surveyor Examination 2026</div>
+      ${[90,70,84,60].map(w=>`<div style="height:10px;width:${w}%;background:rgba(23,35,68,.12);border-radius:3px;margin-top:22px"></div>`).join("")}
+      <div style="margin-top:50px;font:400 25px Geist;color:var(--ink2)">Last date to apply:</div>
+      <div style="position:relative;height:50px;font:600 34px Geist;margin-top:6px"><div style="position:absolute;opacity:${1-flip}">30 November 2026</div><div style="position:absolute;opacity:${flip};color:var(--acc);transform:translateY(${(1-flip)*24}px)">05 November 2026</div></div>
+      ${[76,64].map(w=>`<div style="height:10px;width:${w}%;background:rgba(23,35,68,.12);border-radius:3px;margin-top:26px"></div>`).join("")}</div>
+    <div style="position:absolute;left:0;right:0;top:${lerp(-20,740,((u*.55)%1))}px;height:120px;background:linear-gradient(transparent,rgba(228,80,47,.10),transparent)"></div></div>
+  <svg class="abs" style="left:740px;top:520px" width="140" height="40"><path d="M0 20 H${120*ex((u-.5)/.6)}" stroke="#172344" stroke-width="3" fill="none"/><path d="M110 8 l14 12 -14 12" stroke="#172344" stroke-width="3" fill="none" opacity="${cl((u-1)*3)}"/></svg>
+  <div class="abs" style="left:920px;top:340px;width:880px">
+    <div class="kick" style="${rise(u,.6)}">SHA-256 · computed from the bytes</div>
+    <div style="margin-top:26px">${hexGrid(cur,locked,Math.floor(u*14),prev,44,30)}</div>
+    ${changed?`<div class="mono" style="margin-top:22px;font-size:20px;color:var(--ink3);text-decoration:line-through;opacity:${cl((u-l2-2.6)*2)*.8}">${F.h1.slice(0,32)}…</div>`:""}
+    <div style="margin-top:34px;font:400 italic 52px Newsreader;opacity:${cl((u-l2-2.4)*2)}">One edit. <span style="color:var(--acc)">A different fingerprint.</span></div></div>`},
+
+witness(u,S){
+  const l2=L(S,1);
+  const node=(x,title,sub,at,dark)=>`<div class="card ${dark?"navy":""}" style="left:${x}px;top:250px;width:400px;height:200px;padding:34px;${pop(u,at)}"><div style="font:600 34px Geist;letter-spacing:-.03em">${title}</div><div class="mono" style="margin-top:12px;font-size:17px;opacity:.65">${sub}</div></div>`;
+  const pk=(x0,x1,t0)=>{const k=((u-t0)%1.6)/1.6;return u<t0?"":`<div class="abs" style="left:${lerp(x0,x1,eio(k))}px;top:342px;width:18px;height:18px;border-radius:50%;background:var(--acc);opacity:${Math.sin(Math.PI*k)}"></div>`};
+  const ents=[["seen","var(--moss)","sha256 0x1a89d92e…6c5a","0x09ab88cd…"],["changed","var(--ochre)","sha256 0xcc807160…6e06","0xde3d2faa…"],["gone","var(--brick)","HTTP 404 · notice-3","0x67acc4d5…"]];
+  return `<div class="shot-n"><b>05</b> · WITNESSES WRITE</div>
+  ${node(140,"Notice URL","publisher's website",.1)}${node(760,"Witness","fetch · hash · diff",.5)}${node(1380,"Arkiv","Tiramisu · Web3 database",.9,true)}
+  <svg class="abs" style="left:0;top:0" width="1920" height="600"><line x1="540" y1="350" x2="${lerp(540,760,ex((u-.8)/.6))}" y2="350" stroke="rgba(23,35,68,.35)" stroke-width="3" stroke-dasharray="8 10"/><line x1="1160" y1="350" x2="${lerp(1160,1380,ex((u-1.2)/.6))}" y2="350" stroke="rgba(23,35,68,.35)" stroke-width="3" stroke-dasharray="8 10"/></svg>
+  ${pk(540,742,1.3)}${pk(1160,1362,2.0)}
+  <div class="abs" style="left:1420px;top:470px;font:500 15px 'Geist Mono';color:var(--ink3);opacity:${cl((u-2.2)*2)}">one atomic batch per run</div>
+  ${ents.map((e,i)=>{const at=l2+i*.75, k=spring((u-at)*1.3,.5,12);return `<div class="card" style="left:${200+i*520}px;top:${lerp(1100,620,k)}px;width:480px;height:200px;padding:30px;opacity:${cl((u-at)*4)}">
+    <div class="chip" style="background:${e[1]};color:#fff">${e[0]}</div><div class="mono" style="margin-top:26px;font-size:20px">${e[2]}</div><div class="mono" style="margin-top:10px;font-size:16px;color:var(--ink3)">entity ${e[3]} · readonly</div></div>`}).join("")}`},
+
+arkiv(u,S){
+  const l2=L(S,1), z=ex((u-.1)/.9);
+  const row=(i,k,v,at)=>`<div style="display:flex;gap:30px;padding:18px 0;border-top:1px solid var(--rule);${rise(u,at,.5,16)}"><div class="kick" style="width:200px;padding-top:4px">${k}</div><div class="mono" style="font-size:24px">${v}</div></div>`;
+  const shake=u>l2+.8&&u<l2+1.6?Math.sin((u-l2)*60)*8*(1-(u-l2-.8)/.8):0;
+  const locked=u>l2+1.4;
+  return `<div class="shot-n"><b>06</b> · ON ARKIV</div>
+  <div class="card" style="left:250px;top:150px;width:1420px;height:760px;padding:56px 64px;transform:scale(${lerp(.82,1,z)});opacity:${cl(u*3)}">
+    <div style="display:flex;justify-content:space-between;align-items:center"><div><div class="kick">Arkiv entity · observation</div><div style="font:600 44px Geist;letter-spacing:-.03em;margin-top:10px">notice-2.pdf was <span style="color:var(--moss)">seen</span></div></div>
+      <div class="chip" style="background:${locked?"#172344":"#ece8e1"};color:${locked?"#f6f4f2":"var(--ink2)"};transform:translateX(${shake}px)">${locked?"🔒 readonly":"readonly"}</div></div>
+    <div style="margin-top:34px">
+      ${row(0,"entity",F.seenKey,.5)}${row(1,"creator","<span style='background:#fbe4dc;padding:2px 8px;border-radius:6px'>"+F.A+"</span> · witness A",.75)}
+      ${row(2,"block","749695 · Tiramisu (chain 7738577)",1.0)}${row(3,"doc_sha256","0x"+F.h1.slice(0,40)+"…",1.25)}
+      ${row(4,"expires","block 2045695 · fromDays(30)",1.5)}</div>
+    ${u>l2+.2?`<div class="abs" style="left:${lerp(1500,980,ex((u-l2-.2)/.6))}px;top:470px;font:600 26px Geist;color:var(--brick);opacity:${cl((u-l2-.2)*4)*(locked?Math.max(0,1-(u-l2-1.4)*2):1)}">✎ edit…</div>`:""}
+    <div class="abs" style="left:64px;bottom:44px;font:400 italic 40px Newsreader;opacity:${cl((u-l2-1.8)*2)}">Nobody, including us, can quietly edit it.</div></div>`},
+
+verify(u,S){
+  const l2=L(S,1), drop=spring((u-.4)*1.2,.55,11), hashK=Math.floor(cl((u-1.4)/1.6)*64);
+  const beam=ex((u-l2-.2)/.8), back=ex((u-l2-1.4)/.7), res=spring((u-l2-2.1)*1.2,.55,11);
+  const proof=ex((u-l2-3.2)/1.0);
+  img("img_verify",`left:${lerp(1950,1080,proof)}px;top:150px;width:780px;opacity:${proof};transform:perspective(1600px) rotateY(${lerp(-25,-8,proof)}deg)`);
+  return `<div class="shot-n"><b>07</b> · VERIFY</div>
+  <div class="card" style="left:${lerp(150,90,proof)}px;top:160px;width:${lerp(1100,900,proof)}px;height:760px;padding:0;overflow:hidden">
+    <div style="height:56px;border-bottom:1px solid var(--rule);display:flex;align-items:center;gap:10px;padding:0 24px">${[0,1,2].map(()=>`<span class="dot" style="background:#dfe2e9"></span>`).join("")}<span class="mono" style="margin-left:20px;font-size:16px;color:var(--ink3)">your browser · bhavya-jpg.github.io/sakshi/verify</span></div>
+    <div style="margin:40px;height:180px;border:3px dashed rgba(23,35,68,.2);border-radius:18px;position:relative">
+      <div class="card" style="left:30px;top:${lerp(-300,34,drop)}px;width:460px;height:110px;display:flex;align-items:center;gap:18px;padding:0 22px;box-shadow:none"><svg viewBox="0 0 24 30" width="40" height="50"><path d="M1 1h15l7 7v21H1z" fill="#fff" stroke="#172344" stroke-opacity=".4"/><rect x="4" y="19" width="16" height="6" rx="1" fill="#e4502f"/></svg><div class="mono" style="font-size:20px">demo-notice-1-v1.pdf</div></div>
+      <div class="abs mono" style="right:30px;top:70px;font-size:17px;color:var(--moss);opacity:${cl((u-3)*3)}">✓ stays on this device</div></div>
+    <div style="margin:0 40px"><div class="kick">SHA-256 · computed locally</div><div style="margin-top:16px">${hexGrid("edfaad04958e824739ff07a4bea52793a606d13fe913120daab7b2f60042a397",hashK,Math.floor(u*14),null,30,24)}</div></div>
+    <div style="margin:36px 40px;display:flex;align-items:center;gap:20px;opacity:${cl((u-l2)*3)}">
+      <div class="mono" style="font-size:18px;color:var(--ink2)">query doc_sha256 →</div>
+      <div style="flex:1;height:4px;background:rgba(23,35,68,.1);position:relative"><div style="position:absolute;left:0;top:0;bottom:0;width:${beam*100}%;background:var(--ink)"></div><div style="position:absolute;right:0;top:-6px;width:16px;height:16px;border-radius:50%;background:var(--acc);transform:translateX(${-back*500}px);opacity:${back>0&&back<1?1:0}"></div></div>
+      <div class="chip" style="background:#172344;color:#f6f4f2">Arkiv</div></div>
+    <div style="margin:0 40px;opacity:${cl((u-l2-2.1)*4)};transform:scale(${lerp(.85,1,res)});transform-origin:left">
+      <span class="chip" style="background:#e2ece5;color:var(--moss)"><span class="dot" style="background:var(--moss)"></span>Served · 2 witnesses</span></div></div>
+  ${proof>.5?`<div class="abs chip" style="left:1100px;top:${lerp(960,900,proof)}px;background:var(--acc);color:#fff;opacity:${proof}">Live app · real result</div>`:""}`},
+
+answers(u,S){
+  const l2=L(S,1);
+  const v=[["Served","उपलब्ध","var(--moss)","#e2ece5","This exact file is still what the URL serves.",.3],["Replaced","बदला गया","var(--ochre)","#f6ead3","The URL later served a different file.",1.1],["Removed","हटाया गया","var(--brick)","#f6e0dc","The URL later stopped serving it.",1.9],["No matching record","कोई रिकॉर्ड नहीं","var(--ink2)","transparent","No trusted witness recorded it.",l2]];
+  return `<div class="shot-n"><b>08</b> · FOUR ANSWERS</div>
+  ${v.map((c,i)=>{const k=spring((u-c[5])*1.2,.5,11);return `<div class="card" style="left:${120+i*430}px;top:${lerp(1080,290,k)}px;width:400px;height:470px;padding:36px;opacity:${cl((u-c[5])*4)};${i===3?"background:transparent;border:3px dashed rgba(23,35,68,.3);box-shadow:none":""}">
+     <span class="dot" style="width:18px;height:18px;background:${i===3?"transparent":c[2]};border:${i===3?"2px solid var(--ink3)":"0"}"></span>
+     <div style="margin-top:110px;font:600 46px/1 Geist;letter-spacing:-.04em;color:${c[2]}">${c[0]}</div>
+     <div class="serif" style="font-style:italic;font-size:30px;color:var(--ink3);margin-top:10px">${c[1]}</div>
+     <div style="margin-top:22px;font:400 22px/1.35 Geist;color:var(--ink2)">${c[4]}</div></div>`}).join("")}
+  <div class="abs" style="left:1410px;top:810px;width:420px;font:600 30px Geist;letter-spacing:-.02em;opacity:${cl((u-l2-1.4)*3)}">Never proof of a fake.
+    <svg width="380" height="14" style="display:block;margin-top:4px"><path d="M2 8 Q190 ${2} 378 8" stroke="#e4502f" stroke-width="4" fill="none" stroke-dasharray="400" stroke-dashoffset="${400*(1-ex((u-l2-1.8)/.6))}"/></svg></div>`},
+
+trust(u,S){
+  const l2=L(S,1), l3=L(S,2), d2=LE(S,1)-L(S,1);
+  // toggles land on the spoken phrases: "Untrust one" starts ~42% into line 2, "Untrust both" ~70%
+  const offB=l2+d2*0.45, offA=l2+d2*0.72;
+  const bOn=u<offB, aOn=u<offA, n=(aOn?1:0)+(bOn?1:0);
+  const tog=(on,at)=>{const k=ex((u-at)/.35);const x=on?28:lerp(28,2,k);return `<div style="width:64px;height:38px;border-radius:999px;background:${on?"var(--moss)":"rgba(23,35,68,.18)"};position:relative"><div style="position:absolute;top:4px;left:${on?28:2}px;width:30px;height:30px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2)"></div></div>`};
+  const wcard=(y,label,addr,on,at,offAt)=>`<div class="card" style="left:140px;top:${y}px;width:760px;height:180px;padding:34px;display:flex;align-items:center;gap:30px;${rise(u,at,.7,40)};opacity:${on?1:.55}">
+     ${tog(on,offAt)}<div><div style="font:600 32px Geist;letter-spacing:-.02em">${label}</div><div class="mono" style="font-size:18px;color:var(--ink3);margin-top:8px">${addr}</div></div>
+     ${on?"":`<div class="chip" style="margin-left:auto;background:#ece8e1;color:var(--ink2);transform:scale(${lerp(1.6,1,spring((u-offAt)*1.5))})">ignored</div>`}</div>`;
+  const verdict=n===0?["No matching record","var(--ink2)","transparent"]:["Served","var(--moss)","#e2ece5"];
+  const bump=Math.max(u<offB?0:spring((u-offB)*1.5,.4,14)-1,u<offA?0:spring((u-offA)*1.5,.4,14)-1);
+  return `<div class="shot-n"><b>09</b> · YOU CHOOSE WHO TO TRUST</div>
+  ${wcard(230,"Sakshi witness A",F.A,aOn,.2,offA)}${wcard(450,"Sakshi witness B",F.B,bOn,.5,offB)}
+  <div class="card" style="left:1000px;top:230px;width:780px;height:400px;padding:44px;${rise(u,.8,.7,40)}">
+    <div class="kick">notice 1 · demo-notice-1-v1.pdf</div>
+    <div style="display:flex;align-items:baseline;gap:24px;margin-top:30px"><div style="font:700 200px/1 Geist;letter-spacing:-.06em;transform:scale(${1+bump*.25});transform-origin:left bottom">${n}</div><div style="font:600 40px Geist">witness${n===1?"":"es"}</div></div>
+    <div class="chip" style="margin-top:20px;background:${verdict[2]};color:${verdict[1]};${n===0?"border:2px dashed var(--ink3)":""}">${verdict[0]}</div></div>
+  <div class="abs" style="left:140px;top:720px;width:1640px;display:flex;gap:24px;align-items:center;${rise(u,l3,.8,30)}">
+    <div class="chip" style="background:#172344;color:#f6f4f2">A ≠ B wallets</div><div style="font:400 italic 40px Newsreader">distinct identities, same operator, not independent organisations</div></div>`},
+
+proof(u,S){
+  const l2=L(S,1);
+  const out=["$ npx tsx scripts/verify.ts public/samples/demo-notice-2-v1.pdf","sha256    0x1a89d92e6a8fc8430aa495c255b88d2b…","verdict   REPLACED  (Replaced · बदला गया)","  first seen      2026-10-18T18:45:51Z","  replaced        2026-10-18T18:47:38Z"];
+  let budget=Math.max(0,(u-l2-.4)*60);
+  const term=out.map((l,i)=>{const n=Math.min(l.length,Math.floor(budget));budget-=l.length;return n>0?`<div style="color:${i===0?"#f3a08c":i===2?"#e8b66b":"rgba(246,244,242,.85)"}">${l.slice(0,n)}</div>`:""}).join("");
+  const ex2=ex((u-.8)/1);
+  img("img_explorer",`left:${lerp(1950,1120,ex2)}px;top:140px;width:700px;opacity:${ex2*(1-cl((u-l2)*1.5))};transform:perspective(1600px) rotateY(-10deg)`);
+  return `<div class="shot-n"><b>10</b> · REAL, ON-CHAIN</div>
+  <div class="abs" style="left:140px;top:150px;width:900px">
+    <div class="kick" style="${rise(u,.1)}">Arkiv Tiramisu · chain 7738577 · 2 witness wallets</div>
+    ${F.tx.map((t,i)=>`<div style="display:flex;justify-content:space-between;gap:30px;padding:16px 0;border-top:1px solid var(--rule);${rise(u,.3+i*.22,.5,20)}"><span style="font:500 22px Geist">${t[0]}</span><span class="mono" style="font-size:20px;color:var(--ink2)">${short(t[1],8,6)}</span></div>`).join("")}</div>
+  <div class="card navy" style="left:${lerp(1950,1080,ex((u-l2)/.8))}px;top:200px;width:740px;height:420px;padding:34px;border-radius:22px">
+    <div style="display:flex;gap:9px;margin-bottom:22px">${[0,1,2].map(()=>`<span class="dot" style="background:rgba(246,244,242,.2)"></span>`).join("")}</div>
+    <div class="mono" style="font-size:17px;line-height:1.8;white-space:pre">${term}</div>
+    <div class="mono" style="position:absolute;bottom:22px;left:34px;font-size:13px;color:rgba(246,244,242,.5)">real output · public RPC · no key · no Sakshi server</div></div>`},
+
+close(u,S){
+  const k=spring(u*1.1);
+  return `<div class="abs" style="left:150px;top:230px;transform:scale(${lerp(.4,1,k)});transform-origin:left;opacity:${cl(u*4)}">${eye(110,eio(u/.8))}</div>
+  <div class="abs" style="left:150px;top:380px">
+    <div class="big" style="font-size:220px;overflow:hidden"><div style="transform:translateY(${(1-ex((u-.3)/.8))*110}%)">Sakshi</div></div>
+    <div style="font:400 italic 86px Newsreader;color:var(--acc);margin-top:6px;${rise(u,.9)}">The truth leaves a trace.</div>
+    <div style="display:flex;gap:60px;margin-top:60px;font:500 26px 'Geist Mono';${rise(u,1.6)}"><span style="border-top:2px solid var(--ink);padding-top:14px">bhavya-jpg.github.io/sakshi</span><span style="border-top:2px solid var(--ink);padding-top:14px">github.com/bhavya-jpg/sakshi</span></div>
+    <div class="kick" style="margin-top:40px;${rise(u,2.2)}">Verifiable document observations on Arkiv · MIT</div></div>`},
+};
+
+// ── clock ──
+const stage=document.getElementById("stage"), wipe=document.getElementById("wipe"), sub=document.getElementById("sub");
+window.seek=(t)=>{
+  const shots=TL.shots; let S=shots[shots.length-1];
+  for(const s of shots){if(t>=s.start&&t<s.start+s.dur){S=s;break}}
+  const u=t-S.start; hideImgs();
+  stage.innerHTML=SHOTS[S.name](u,S);
+  // exit: last 0.45 s of each shot lifts and fades; entry is inside each shot
+  const exitK=cl((u-(S.dur-.45))/.45);
+  stage.style.transform=`translateY(${-30*eio(exitK)}px) scale(${1-.02*eio(exitK)})`; stage.style.opacity=1-eio(exitK);
+  // accent wipe across the cut (0.5 s centred on the boundary)
+  let w=0, from=0;
+  if(S.dur-u<.25){w=eio((u-(S.dur-.25))/.25);from=0}
+  else if(u<.25&&S!==shots[0]){w=1-eio(u/.25);from=1}
+  wipe.style.left=from?`${(1-w)*1920}px`:"0px"; wipe.style.width=`${w*1920}px`; wipe.style.left=from?`${1920-w*1920}px`:"0px";
+  // burned-in caption (also delivered as .srt)
+  const line=(S.lines||[]).find(l=>t>=l.start&&t<=l.end+.15);
+  sub.style.display=line?"block":"none"; if(line)sub.textContent=line.text;
+};
+Promise.all([document.fonts.load("600 40px Geist"),document.fonts.load("500 20px 'Geist Mono'"),document.fonts.load("italic 40px Newsreader"),...[...document.images].map(i=>i.decode().catch(()=>{}))]).then(()=>document.fonts.ready).then(()=>{window.__ready=true});
+</script></body></html>
