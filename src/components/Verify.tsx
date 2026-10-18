@@ -4,7 +4,7 @@ import { BASE } from "@/lib/base"
 import { WITNESSES } from "@/lib/config"
 import { sha256Hex } from "@/lib/hash"
 import { SAMPLES } from "@/lib/samples"
-import { verifyHash } from "@/lib/service"
+import { fetchEvidence, verdictFromEvidence, type Evidence } from "@/lib/service"
 import type { Verdict } from "@/lib/verdict"
 import { CopyHash, HashGrid } from "./Hash"
 import { DemoBadge, VerdictView } from "./VerdictView"
@@ -19,6 +19,7 @@ export function Verify() {
   const [phase, setPhase] = useState<Phase>("idle")
   const [file, setFile] = useState<FileMeta | null>(null)
   const [verdict, setVerdict] = useState<Verdict | null>(null)
+  const [evidence, setEvidence] = useState<Evidence | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [drag, setDrag] = useState(false)
   const input = useRef<HTMLInputElement>(null)
@@ -26,11 +27,14 @@ export function Verify() {
   const query = useCallback(async (hash: `0x${string}`, trust: string[]) => {
     setPhase("querying"); setError(null)
     try {
-      // Read straight from the public Tiramisu RPC, in this browser.
-      setVerdict(await verifyHash(hash, trust))
+      // Read straight from the public Tiramisu RPC, in this browser. Fetch evidence for every listed
+      // witness once, so changing which witnesses you trust needs no further queries.
+      const ev = await fetchEvidence(hash, WITNESSES.map((w) => w.address))
+      setEvidence(ev)
+      setVerdict(verdictFromEvidence(ev, trust))
       setPhase("done")
     } catch (e) {
-      setVerdict(null); setPhase("error")
+      setEvidence(null); setVerdict(null); setPhase("error")
       const msg = (e as Error).message ?? ""
       setError(/429|rate|limit/i.test(msg)
         ? "The public Arkiv RPC is rate-limiting this network right now. Wait a few minutes and try again. Your file was not uploaded anywhere."
@@ -39,7 +43,7 @@ export function Verify() {
   }, [])
 
   const examine = useCallback(async (blob: Blob, name: string, lastModified?: number) => {
-    setVerdict(null); setError(null); setPhase("reading")
+    setVerdict(null); setEvidence(null); setError(null); setPhase("reading")
     const buf = await blob.arrayBuffer()
     setPhase("hashing")
     const hash = await sha256Hex(buf)
@@ -57,7 +61,9 @@ export function Verify() {
   const toggle = (a: string) => {
     const next = trusted.includes(a) ? trusted.filter((x) => x !== a) : [...trusted, a]
     setTrusted(next)
-    if (file) query(file.hash, next)
+    // Recompute locally from the records already fetched; only re-query if there are none for this file.
+    if (evidence && file && evidence.hash === file.hash) setVerdict(verdictFromEvidence(evidence, next))
+    else if (file) query(file.hash, next)
   }
 
   const busy = phase === "reading" || phase === "hashing" || phase === "querying"

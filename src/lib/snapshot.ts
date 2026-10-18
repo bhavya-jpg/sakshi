@@ -2,15 +2,15 @@
 // One cached read of the public record for the landing page: every Sakshi observation plus each
 // trusted witness's runs. All numbers shown on the landing page come from here, never from constants.
 import { useEffect, useState } from "react"
-import { allObservations, publicClient, runsByWitness } from "./arkiv"
+import { allObservations, publicClient, runsOfWitnesses } from "./arkiv"
 import { WITNESSES } from "./config"
 import type { Hex32, Observation, Run } from "./schema"
 import { computeVerdict, timelineKey, type Verdict } from "./verdict"
 
-export type Snapshot = { observations: Observation[]; runs: Run[]; block: bigint }
+export type Snapshot = { observations: Observation[]; runs: Run[] }
 
 let cache: Promise<Snapshot> | null = null
-const SESSION_KEY = "sakshi.snapshot.v1"
+const SESSION_KEY = "sakshi.snapshot.v2"
 const SESSION_TTL = 120_000 // reuse a read for 2 minutes across page navigations
 
 export function loadSnapshot(): Promise<Snapshot> {
@@ -18,20 +18,20 @@ export function loadSnapshot(): Promise<Snapshot> {
     try {
       const raw = sessionStorage.getItem(SESSION_KEY)
       if (raw) {
-        const s = JSON.parse(raw) as Omit<Snapshot, "block"> & { block: string; at: number }
-        if (Date.now() - s.at < SESSION_TTL) cache = Promise.resolve({ ...s, block: BigInt(s.block) })
+        const s = JSON.parse(raw) as Snapshot & { at: number }
+        if (Date.now() - s.at < SESSION_TTL) cache = Promise.resolve({ observations: s.observations, runs: s.runs })
       }
     } catch { /* storage unavailable: read fresh */ }
   }
   cache ??= (async () => {
-    const [observations, runLists, block] = await Promise.all([
+    // two queries total, however many witnesses are configured (the block height comes from useBlock)
+    const [observations, runs] = await Promise.all([
       allObservations(),
-      Promise.all(WITNESSES.map((w) => runsByWitness(w.address))),
-      publicClient.getBlockNumber(),
+      runsOfWitnesses(WITNESSES.map((w) => w.address)),
     ])
     observations.sort((a, b) => b.fetchedAt - a.fetchedAt || Number(b.createdAtBlock) - Number(a.createdAtBlock))
-    const snap = { observations, runs: runLists.flat().sort((a, b) => b.runAt - a.runAt), block }
-    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...snap, block: String(block), at: Date.now() })) } catch { /* ignore */ }
+    const snap: Snapshot = { observations, runs }
+    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ...snap, at: Date.now() })) } catch { /* ignore */ }
     return snap
   })().catch((e) => { cache = null; throw e })
   return cache

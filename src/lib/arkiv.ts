@@ -53,6 +53,19 @@ export async function runsByWitness(creator: Hex32): Promise<Run[]> {
   return rows.sort((a, b) => b.runAt - a.runAt)
 }
 
+/** Pure: keep only runs created by `addresses` (case-insensitive), latest first. */
+export function selectWitnessRuns(runs: Run[], addresses: string[]): Run[] {
+  const keep = new Set(addresses.map((a) => a.toLowerCase()))
+  return runs.filter((r) => keep.has(r.creator.toLowerCase())).sort((a, b) => b.runAt - a.runAt)
+}
+
+// Q3b: runs of several witnesses in one query (no createdBy), filtered locally. Same result as calling
+// runsByWitness for each address, at the cost of one query instead of one per witness.
+export async function runsOfWitnesses(addresses: string[]): Promise<Run[]> {
+  const q = publicClient.select(RUN_FIELDS).where(P, RUN).limit(200)
+  return selectWitnessRuns(await fetchAll(q, toRun), addresses)
+}
+
 // Every observation in the project (used for the board page and the "recently witnessed" list).
 export async function allObservations(): Promise<Observation[]> {
   const q = publicClient.select(OBS_FIELDS).where(P, OBS).limit(200)
