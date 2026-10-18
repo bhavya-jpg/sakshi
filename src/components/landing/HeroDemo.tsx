@@ -13,8 +13,8 @@ type Case = { file: string; label: string; hash?: `0x${string}`; verdict?: Verdi
 const CYCLE = 7000
 const tone = {
   SERVED: { text: "text-forest-2", ring: "ring-forest-2/40", bg: "bg-forest-2/10", dot: "bg-forest-2" },
-  REPLACED: { text: "text-[#f0b54a]", ring: "ring-[#f0b54a]/40", bg: "bg-[#f0b54a]/10", dot: "bg-[#f0b54a]" },
-  REMOVED: { text: "text-[#ff7b72]", ring: "ring-[#ff7b72]/40", bg: "bg-[#ff7b72]/10", dot: "bg-[#ff7b72]" },
+  REPLACED: { text: "text-[#e8b66b]", ring: "ring-[#e8b66b]/40", bg: "bg-[#e8b66b]/10", dot: "bg-[#e8b66b]" },
+  REMOVED: { text: "text-[#f0937f]", ring: "ring-[#f0937f]/40", bg: "bg-[#f0937f]/10", dot: "bg-[#f0937f]" },
   NOT_SEEN: { text: "text-white/80", ring: "ring-white/20", bg: "bg-white/5", dot: "bg-white/40" },
 } as const
 
@@ -69,8 +69,7 @@ export function HeroDemo() {
 
   return (
     <div className="relative" aria-label="Animated demo of a verification, using live data from Arkiv">
-      <div className="pointer-events-none absolute -inset-x-10 -top-10 bottom-0 rounded-[40px] bg-forest-2/10 blur-3xl" aria-hidden />
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-night-2/90 shadow-[0_40px_120px_-40px_rgba(25,169,113,0.35),0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur">
+      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-night-2/90 shadow-[0_50px_100px_-50px_rgba(23,35,68,0.6),0_0_0_1px_rgba(23,35,68,0.04)]">
         {/* window chrome */}
         <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3">
           <span className="flex gap-1.5" aria-hidden>{[0, 1, 2].map((i) => <span key={i} className="h-2.5 w-2.5 rounded-full bg-white/15" />)}</span>
@@ -78,7 +77,7 @@ export function HeroDemo() {
             <svg viewBox="0 0 12 12" className="h-3 w-3 shrink-0" fill="currentColor" aria-hidden><path d="M6 1a2.5 2.5 0 00-2.5 2.5V5H3a1 1 0 00-1 1v4a1 1 0 001 1h6a1 1 0 001-1V6a1 1 0 00-1-1h-.5V3.5A2.5 2.5 0 006 1zm1.5 4h-3V3.5a1.5 1.5 0 013 0V5z" /></svg>
             bhavya-jpg.github.io/sakshi/verify
           </span>
-          <span className="mono hidden text-[10px] uppercase tracking-[0.12em] text-forest-2 sm:inline">● live</span>
+          <span className="mono hidden text-[10px] uppercase tracking-[0.12em] text-[#f3a08c] sm:inline">● live</span>
         </div>
 
         <div className="grid grid-cols-1 gap-0 md:grid-cols-[1.05fr_1fr]">
@@ -89,7 +88,7 @@ export function HeroDemo() {
                 <svg viewBox="0 0 24 30" className="h-8 w-6 shrink-0" aria-hidden>
                   <path d="M1 1h15l7 7v21H1z" fill="#fff" fillOpacity=".06" stroke="#fff" strokeOpacity=".3" />
                   <path d="M16 1v7h7" stroke="#fff" strokeOpacity=".3" fill="none" />
-                  <rect x="4" y="19" width="16" height="6" rx="1" fill="#c42b20" />
+                  <rect x="4" y="19" width="16" height="6" rx="1" fill="#e4502f" />
                 </svg>
                 <div className="min-w-0">
                   <p className="mono truncate text-[12px] text-white">{c.file}</p>
@@ -165,7 +164,7 @@ export function HeroDemo() {
       </div>
       {/* case selector dots */}
       <div className="mt-4 flex justify-center gap-2" aria-hidden>
-        {cases.map((_, i) => <span key={i} className={`h-1 rounded-full transition-all duration-500 ${i === idx ? "w-8 bg-forest-2" : "w-3 bg-white/20"}`} />)}
+        {cases.map((_, i) => <span key={i} className={`h-1 rounded-full transition-all duration-500 ${i === idx ? "w-8 bg-accent" : "w-3 bg-ink/15"}`} />)}
       </div>
     </div>
   )

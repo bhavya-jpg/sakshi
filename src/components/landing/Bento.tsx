@@ -52,7 +52,7 @@ function FingerprintViz() {
         {[24, 31, 38].map((y) => <line key={y} x1="9" x2="38" y1={y} y2={y} stroke="var(--ink-3)" strokeWidth="1.5" />)}
         <rect x="9" y="45" width="22" height="7" rx="1.5" fill="var(--signal)" />
       </svg>
-      <svg viewBox="0 0 40 12" className="h-3 w-10 shrink-0" aria-hidden><path d="M0 6h36m-5-5 5 5-5 5" stroke="var(--forest)" strokeWidth="1.5" fill="none" className="flow" /></svg>
+      <svg viewBox="0 0 40 12" className="h-3 w-10 shrink-0" aria-hidden><path d="M0 6h36m-5-5 5 5-5 5" stroke="var(--accent)" strokeWidth="1.5" fill="none" className="flow" /></svg>
       <p className="mono grid min-w-0 grid-cols-4 gap-x-2.5 gap-y-1 text-[11.5px] sm:text-[12.5px]" aria-label={`SHA-256 ${target}`}>
         {Array.from({ length: 8 }, (_, g) => (
           <span key={g}>{Array.from({ length: 8 }, (_, k) => {
@@ -87,7 +87,7 @@ function TimelineViz() {
   const step = n < 0 ? 3 : on ? (n % 5) + 1 : 1
   const rows = [
     { k: "seen", c: "bg-forest-2", t: "00:15", d: "notice-2.pdf · 0x1a89d9…" },
-    { k: "changed", c: "bg-[#e0a33a]", t: "00:17", d: "now 0xcc8071… · prev struck" },
+    { k: "changed", c: "bg-ochre", t: "00:17", d: "now 0xcc8071… · prev struck" },
     { k: "gone", c: "bg-oxblood", t: "00:17", d: "notice-3.pdf · HTTP 404" },
   ]
   return (
@@ -136,7 +136,7 @@ function ServerlessViz() {
         <div key={a} className="contents">
           {i === 1 && (
             <svg viewBox="0 0 120 20" className="h-5 w-24 shrink-0" aria-hidden>
-              <line x1="0" y1="10" x2="120" y2="10" stroke="var(--forest-2)" strokeWidth="1.5" className="flow" />
+              <line x1="0" y1="10" x2="120" y2="10" stroke="var(--accent)" strokeWidth="1.5" className="flow" />
             </svg>
           )}
           <div className={`rounded-xl border px-4 py-3 text-center ${i === 1 ? "border-white/10 bg-night text-white" : "border-rule bg-sheet"}`}>
@@ -171,8 +171,8 @@ function TerminalViz() {
         const show = Math.max(0, Math.min(l.length, budget)); budget -= l.length
         if (show === 0 && i > 0) return null
         return (
-          <div key={i} className={`truncate ${l.startsWith("verdict") ? "text-[#f0b54a]" : i === 0 ? "text-white" : ""}`}>
-            <span className="text-forest-2">{p}</span>{l.slice(0, show)}{show < l.length && <span className="caret" />}
+          <div key={i} className={`truncate ${l.startsWith("verdict") ? "text-[#e8b66b]" : i === 0 ? "text-white" : ""}`}>
+            <span className="text-[#f3a08c]">{p}</span>{l.slice(0, show)}{show < l.length && <span className="caret" />}
           </div>
         )
       })}

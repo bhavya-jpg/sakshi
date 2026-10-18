@@ -33,14 +33,14 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", on)
   }, [])
   useEffect(() => setOpen(false), [path])
-  const home = path === "/"
-  const dark = home && !scrolled && !open
+  // One light, translucent bar on every page; it gains a hairline and blur once the page scrolls.
+  const dark = false
   const active = (h: string) => path === h || path === h.replace(/\/$/, "")
 
   return (
-    <header className={`sticky top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300 ${dark
-      ? "border-b border-transparent bg-transparent"
-      : "border-b border-rule bg-paper/80 shadow-[0_1px_0_rgba(12,15,14,0.02)] backdrop-blur-xl"}`}>
+    <header className={`sticky top-0 z-50 transition-[background-color,border-color,box-shadow] duration-300 ${scrolled || open
+      ? "border-b border-rule bg-paper/85 backdrop-blur-xl"
+      : "border-b border-transparent bg-paper/0"}`}>
       <div className={`mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 sm:px-8 ${dark ? "text-white" : "text-ink"}`}>
         <Link href="/" className="flex items-center gap-2.5" aria-label="Sakshi home">
           <LogoMark className={`h-7 w-7 ${dark ? "text-white/10" : "text-ink"}`} />

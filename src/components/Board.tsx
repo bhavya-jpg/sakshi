@@ -25,9 +25,9 @@ export function Board() {
   }, [])
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-rule-strong bg-sheet shadow-[0_30px_60px_-40px_rgba(12,15,14,0.4)]">
+    <div className="overflow-hidden rounded-2xl border border-rule-strong bg-sheet shadow-[0_30px_60px_-40px_rgba(23,35,68,0.4)]">
       {/* fictional portal masthead */}
-      <div className="flex flex-wrap items-center gap-4 border-b border-rule-strong bg-[#e8ebe6] px-5 py-4 sm:px-7">
+      <div className="flex flex-wrap items-center gap-4 border-b border-rule-strong bg-paper-2 px-5 py-4 sm:px-7">
         <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden className="shrink-0">
           <circle cx="22" cy="22" r="21" fill="none" stroke="var(--ink)" />
           <circle cx="22" cy="22" r="16" fill="none" stroke="var(--ink)" strokeDasharray="2 3" />

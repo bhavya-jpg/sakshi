@@ -22,7 +22,6 @@ const cols = [
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-night text-white/70">
-      <div className="grid-bg pointer-events-none absolute inset-0 opacity-60" aria-hidden />
       <div className="relative mx-auto max-w-6xl px-4 pb-10 pt-16 sm:px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">

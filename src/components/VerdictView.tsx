@@ -26,7 +26,7 @@ export function VerdictView({ v }: { v: Verdict }) {
   const t = VERDICT_TEXT[v.overall]
   const tone = statusTone[v.overall]
   return (
-    <section aria-live="polite" className={`reveal fade-in overflow-hidden rounded-2xl border border-rule border-t-4 ${tone.rule} bg-sheet shadow-[0_20px_50px_-30px_rgba(12,15,14,0.35)]`} data-shown="true">
+    <section aria-live="polite" className={`reveal fade-in overflow-hidden rounded-2xl border border-rule border-t-4 ${tone.rule} bg-sheet shadow-[0_20px_50px_-30px_rgba(23,35,68,0.35)]`} data-shown="true">
       <header className="grid grid-cols-1 gap-4 border-b border-rule p-5 sm:grid-cols-[1fr_auto] sm:p-7">
         <div>
           <p className="kicker">Evidence found</p>

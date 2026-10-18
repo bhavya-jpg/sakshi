@@ -8,7 +8,7 @@ export default function VerifyPage() {
           <p className="kicker fade-in">Nº 01 · Verify</p>
           <h1 className="display mt-4 text-[clamp(2.75rem,7vw,5.5rem)]">
             <span className="line-mask"><span>Examine a</span></span>
-            <span className="line-mask"><span style={{ animationDelay: "100ms" }}><em className="italic text-forest">document.</em></span></span>
+            <span className="line-mask"><span style={{ animationDelay: "100ms" }}><em className="italic text-accent">document.</em></span></span>
           </h1>
         </div>
         <p className="fade-in self-end text-[15px] leading-relaxed text-ink-2 lg:col-span-4 lg:col-start-9" style={{ animationDelay: "400ms" }}>

@@ -6,7 +6,7 @@ import { LiveStats, RecordFeed } from "@/components/landing/Live"
 import { Reveal } from "@/components/Reveal"
 
 const Check = () => (
-  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 text-forest-2" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><path d="M3 8.5l3 3 7-7" /></svg>
+  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 text-accent" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><path d="M3 8.5l3 3 7-7" /></svg>
 )
 
 const problems = [
@@ -17,7 +17,7 @@ const problems = [
 
 const verdicts = [
   { k: "Served", hi: "उपलब्ध", c: "text-forest", dot: "bg-forest-2", d: "A trusted witness saw this exact file at the URL and has not seen it change." },
-  { k: "Replaced", hi: "बदला गया", c: "text-ochre", dot: "bg-[#e0a33a]", d: "This file was served, then the same URL started serving a different one." },
+  { k: "Replaced", hi: "बदला गया", c: "text-ochre", dot: "bg-ochre", d: "This file was served, then the same URL started serving a different one." },
   { k: "Removed", hi: "हटाया गया", c: "text-oxblood", dot: "bg-oxblood", d: "This file was served, then the URL stopped serving anything." },
   { k: "No matching record", hi: "कोई रिकॉर्ड नहीं", c: "text-ink-2", dot: "border border-ink-3", d: "No trusted witness recorded it. Not evidence of a fake. Check the official source." },
 ]
@@ -34,41 +34,41 @@ export default function Home() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative -mt-16 overflow-hidden bg-night pb-24 pt-32 text-white sm:pt-36">
-        <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
-        <div className="glow pointer-events-none absolute inset-0" aria-hidden />
+      <section className="relative -mt-16 overflow-hidden pb-20 pt-32 sm:pt-40">
         <div className="relative mx-auto max-w-6xl px-4 sm:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <Link href="/how/" className="fade-in inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 py-1 pl-1.5 pr-3 text-[12.5px] text-white/75 hover:border-white/25">
-              <span className="mono rounded-full bg-forest-2/15 px-2 py-0.5 text-[10.5px] uppercase tracking-[0.1em] text-forest-2">Live</span>
-              Records on Arkiv · Tiramisu testnet <span aria-hidden>→</span>
-            </Link>
-            <h1 className="display mt-7 text-[clamp(2.9rem,7.4vw,5.6rem)]">
-              <span className="line-mask"><span>Proof of what was</span></span>
-              <span className="line-mask"><span style={{ animationDelay: "110ms" }}><em className="text-forest-2">actually</em> published.</span></span>
-            </h1>
-            <p className="fade-in mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-white/65" style={{ animationDelay: "350ms" }}>
-              Check a forwarded notice PDF against independent witness records: which exact file an official URL served, and
-              when it changed or disappeared.
-            </p>
-            <div className="fade-in mt-9 flex flex-wrap justify-center gap-3" style={{ animationDelay: "500ms" }}>
-              <Link href="/verify/" className="btn btn-green">Verify a PDF <span className="arrow" aria-hidden>→</span></Link>
-              <Link href="/board/" className="btn btn-ghost-night">See a notice change</Link>
-            </div>
-            <ul className="fade-in mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[13px] text-white/55" style={{ animationDelay: "650ms" }}>
+          <Link href="/how/" className="fade-in inline-flex items-center gap-2.5 rounded-full border border-rule-strong bg-sheet py-1 pl-1.5 pr-3.5 text-[12.5px] text-ink-2 hover:border-ink">
+            <span className="mono rounded-full bg-ink px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-paper">Live</span>
+            Records on Arkiv · Tiramisu testnet <span aria-hidden>→</span>
+          </Link>
+          <h1 className="display mt-8 text-[clamp(3rem,8.4vw,8.25rem)] text-ink">
+            <span className="line-mask"><span>Proof of what was</span></span>
+            <span className="line-mask"><span style={{ animationDelay: "110ms" }}><em className="text-accent">actually</em> published.</span></span>
+          </h1>
+          <div className="mt-10 grid grid-cols-1 gap-8 border-t border-rule pt-8 lg:grid-cols-12">
+            <ul className="fade-in flex flex-wrap content-start gap-x-6 gap-y-2 text-[13px] text-ink-2 lg:col-span-6" style={{ animationDelay: "550ms" }}>
               {["Nothing uploaded", "Readonly public records", "Open source · MIT", "No server to trust"].map((x) => (
                 <li key={x} className="flex items-center gap-1.5"><Check />{x}</li>
               ))}
             </ul>
+            <div className="fade-in lg:col-span-5 lg:col-start-8" style={{ animationDelay: "350ms" }}>
+              <p className="text-[17px] leading-relaxed text-ink-2">
+                Check a forwarded notice PDF against independent witness records: which exact file an official URL served,
+                and when it changed or disappeared.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link href="/verify/" className="btn btn-solid">Verify a PDF <span className="arrow" aria-hidden>→</span></Link>
+                <Link href="/board/" className="btn">See a notice change</Link>
+              </div>
+            </div>
           </div>
-          <div className="fade-in mx-auto mt-16 max-w-5xl" style={{ animationDelay: "750ms" }}>
+          <div className="fade-in mt-14" style={{ animationDelay: "700ms" }}>
             <HeroDemo />
           </div>
         </div>
       </section>
 
       {/* ── Live proof strip ── */}
-      <section className="relative mx-auto -mt-10 max-w-6xl px-4 sm:px-8">
+      <section className="relative mx-auto max-w-6xl px-4 sm:px-8">
         <LiveStats />
       </section>
 
@@ -77,7 +77,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
           <Reveal className="reveal lg:col-span-5">
             <p className="eyebrow">The problem</p>
-            <h2 className="h2 mt-4">A PDF arrives on WhatsApp. <em className="text-forest">Is it what the board published?</em></h2>
+            <h2 className="h2 mt-4">A PDF arrives on WhatsApp. <em className="text-accent">Is it what the board published?</em></h2>
             <p className="mt-5 max-w-md text-[16px] leading-relaxed text-ink-2">
               Recruitment and exam candidates act on forwarded notices. &ldquo;Check the official site&rdquo; only works if the site
               still shows what it showed before.
@@ -97,11 +97,10 @@ export default function Home() {
 
       {/* ── How it works ── */}
       <section id="how" className="relative mt-28 border-y border-rule bg-sheet py-24">
-        <div className="grid-bg-light pointer-events-none absolute inset-0" aria-hidden />
         <div className="relative mx-auto max-w-6xl px-4 sm:px-8">
           <Reveal className="reveal mx-auto max-w-2xl text-center">
             <p className="eyebrow">How it works</p>
-            <h2 className="h2 mt-4">Witnesses write. <em className="text-forest">Anyone reads.</em></h2>
+            <h2 className="h2 mt-4">Witnesses write. <em className="text-accent">Anyone reads.</em></h2>
             <p className="mt-4 text-[16px] text-ink-2">Two independent paths meet at one public record.</p>
           </Reveal>
           <Reveal className="reveal mt-14"><FlowDiagram /></Reveal>
@@ -124,7 +123,7 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-4 pt-28 sm:px-8">
         <Reveal className="reveal max-w-2xl">
           <p className="eyebrow">Why you can trust a result</p>
-          <h2 className="h2 mt-4">Built so that <em className="text-forest">nobody</em> has to be taken at their word, including us.</h2>
+          <h2 className="h2 mt-4">Built so that <em className="text-accent">nobody</em> has to be taken at their word, including us.</h2>
         </Reveal>
         <Reveal className="reveal mt-12"><Bento /></Reveal>
       </section>
@@ -134,7 +133,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
           <Reveal className="reveal lg:col-span-4">
             <p className="eyebrow"><span className="pulse-dot h-1.5 w-1.5 rounded-full bg-forest-2 text-forest-2" />The public record</p>
-            <h2 className="h2 mt-4">Live from <em className="text-forest">Tiramisu.</em></h2>
+            <h2 className="h2 mt-4">Live from <em className="text-accent">Tiramisu.</em></h2>
             <p className="mt-4 text-[15px] leading-relaxed text-ink-2">
               These rows are queried from Arkiv by your browser as this page loads. Each one links to its URL timeline.
             </p>
@@ -151,7 +150,7 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-4 pt-28 sm:px-8">
         <Reveal className="reveal max-w-2xl">
           <p className="eyebrow">Reading a result</p>
-          <h2 className="h2 mt-4">Four answers. <em className="text-forest">None of them guesses.</em></h2>
+          <h2 className="h2 mt-4">Four answers. <em className="text-accent">None of them guesses.</em></h2>
         </Reveal>
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {verdicts.map((v, i) => (
@@ -170,7 +169,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
           <Reveal className="reveal lg:col-span-4">
             <p className="eyebrow">Questions</p>
-            <h2 className="h2 mt-4">Plainly <em className="text-forest">answered.</em></h2>
+            <h2 className="h2 mt-4">Plainly <em className="text-accent">answered.</em></h2>
           </Reveal>
           <div className="divide-y divide-rule border-y border-rule lg:col-span-8">
             {faq.map(([q, a]) => (
@@ -188,10 +187,8 @@ export default function Home() {
       {/* ── CTA ── */}
       <section className="mx-auto max-w-6xl px-4 py-28 sm:px-8">
         <Reveal className="reveal relative overflow-hidden rounded-3xl bg-night px-6 py-16 text-center text-white sm:px-12">
-          <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden />
-          <div className="glow pointer-events-none absolute inset-0" aria-hidden />
           <div className="relative">
-            <h2 className="h2 mx-auto max-w-2xl">Hold a notice up to <em className="text-forest-2">the record.</em></h2>
+            <h2 className="h2 mx-auto max-w-2xl">Hold a notice up to <em className="text-accent">the record.</em></h2>
             <p className="mx-auto mt-4 max-w-md text-[15px] text-white/60">Drop a PDF. Get an answer in seconds, from data nobody can quietly change.</p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link href="/verify/" className="btn btn-green">Verify a PDF <span className="arrow" aria-hidden>→</span></Link>

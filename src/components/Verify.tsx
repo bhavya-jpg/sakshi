@@ -77,7 +77,7 @@ export function Verify() {
           onDragOver={(e) => { e.preventDefault(); setDrag(true) }}
           onDragLeave={() => setDrag(false)}
           onDrop={(e) => { e.preventDefault(); setDrag(false); const f = e.dataTransfer.files[0]; if (f) examine(f, f.name, f.lastModified) }}
-          className={`group relative overflow-hidden rounded-2xl border-2 border-dashed bg-sheet transition-[border-color,background-color,box-shadow] duration-500 ${drag ? "border-forest-2 bg-forest-tint shadow-[0_0_0_6px_rgba(25,169,113,0.12)]" : "border-rule-strong hover:border-ink-3 hover:shadow-[0_12px_32px_-16px_rgba(12,15,14,0.25)]"}`}
+          className={`group relative overflow-hidden rounded-2xl border-2 border-dashed bg-sheet transition-[border-color,background-color,box-shadow] duration-500 ${drag ? "border-accent bg-accent-tint shadow-[0_0_0_6px_rgba(228,80,47,0.12)]" : "border-rule-strong hover:border-ink-3 hover:shadow-[0_12px_32px_-16px_rgba(23,35,68,0.25)]"}`}
         >
           <button type="button" onClick={() => input.current?.click()} disabled={busy}
             className="flex w-full flex-col items-start gap-6 p-6 text-left sm:flex-row sm:items-center sm:p-8">

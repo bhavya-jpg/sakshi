@@ -17,7 +17,7 @@ export default function BoardPage() {
             <p className="kicker fade-in">Nº 03 · Demo board</p>
             <h1 className="display mt-4 text-[clamp(2.75rem,7vw,5.5rem)]">
               <span className="line-mask"><span>A notice board</span></span>
-              <span className="line-mask"><span style={{ animationDelay: "100ms" }}>that <em className="italic text-forest">changes.</em></span></span>
+              <span className="line-mask"><span style={{ animationDelay: "100ms" }}>that <em className="italic text-accent">changes.</em></span></span>
             </h1>
           </div>
           <div className="fade-in self-end space-y-3 text-[15px] leading-relaxed text-ink-2 lg:col-span-4 lg:col-start-9" style={{ animationDelay: "400ms" }}>

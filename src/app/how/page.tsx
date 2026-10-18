@@ -38,7 +38,7 @@ export default function How() {
         <p className="kicker fade-in">Nº 04 · Method</p>
         <h1 className="display mt-4 max-w-4xl text-[clamp(2.75rem,7vw,5.5rem)]">
           <span className="line-mask"><span>How a trace</span></span>
-          <span className="line-mask"><span style={{ animationDelay: "100ms" }}>is <em className="italic text-forest">kept.</em></span></span>
+          <span className="line-mask"><span style={{ animationDelay: "100ms" }}>is <em className="italic text-accent">kept.</em></span></span>
         </h1>
       </header>
 

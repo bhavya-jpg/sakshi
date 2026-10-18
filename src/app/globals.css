@@ -3,25 +3,29 @@
 /* ── Sakshi design tokens ──────────────────────────────────────────────────
    Calm, trustworthy product palette: cool ivory, near-black ink, evidence green. */
 :root {
-  --paper: #f6f5f1;
-  --paper-2: #eeede7;
-  --sheet: #ffffff;
-  --ink: #0c0f0e;
-  --ink-2: #3c433f;
-  --ink-3: #737a76;
-  --rule: rgba(12, 15, 14, 0.09);
-  --rule-strong: rgba(12, 15, 14, 0.2);
-  --forest: #0f6b46;
-  --forest-2: #19a971;
-  --forest-tint: #e5f2eb;
-  --ochre: #9a6406;
-  --ochre-tint: #fbefd5;
-  --oxblood: #a3262a;
-  --oxblood-tint: #fbe4e2;
-  --signal: #c42b20;
-  --night: #080b0a;
-  --night-2: #0f1412;
-  --night-rule: rgba(255, 255, 255, 0.08);
+  /* Two-colour premium base (warm paper + deep navy ink) with one vermillion accent.
+     References: Awwwards SOTD palettes, e.g. Odyssée #1E305E/#F6F4F2, Heron AI #F15534/#282828. */
+  --paper: #f6f4f2;
+  --paper-2: #ece8e1;
+  --sheet: #fcfbf9;
+  --ink: #172344;
+  --ink-2: #4a546f;
+  --ink-3: #868ca0;
+  --rule: rgba(23, 35, 68, 0.11);
+  --rule-strong: rgba(23, 35, 68, 0.24);
+  --accent: #e4502f;
+  --accent-tint: #fbe4dc;
+  --forest: #2c6a50;      /* served / seen: muted moss */
+  --forest-2: #7cc4a4;    /* the same, legible on navy */
+  --forest-tint: #e2ece5;
+  --ochre: #a86c12;       /* replaced */
+  --ochre-tint: #f6ead3;
+  --oxblood: #b23a2e;     /* removed */
+  --oxblood-tint: #f6e0dc;
+  --signal: #e4502f;      /* DEMO SOURCE labels share the accent */
+  --night: #172344;       /* dark surfaces are navy, never black */
+  --night-2: #1d2b52;
+  --night-rule: rgba(246, 244, 242, 0.12);
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
 }
 
@@ -34,6 +38,8 @@
   --color-ink-3: var(--ink-3);
   --color-rule: var(--rule);
   --color-rule-strong: var(--rule-strong);
+  --color-accent: var(--accent);
+  --color-accent-tint: var(--accent-tint);
   --color-forest: var(--forest);
   --color-forest-2: var(--forest-2);
   --color-forest-tint: var(--forest-tint);
@@ -57,8 +63,8 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   text-rendering: optimizeLegibility;
 }
-::selection { background: var(--forest); color: #fff; }
-:focus-visible { outline: 2px solid var(--forest-2); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--accent); color: #fff; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
 @layer components {
   .mono { font-family: var(--font-geist-mono), ui-monospace, monospace; font-feature-settings: "zero"; }
@@ -75,24 +81,13 @@ body {
   .eyebrow {
     display: inline-flex; align-items: center; gap: 0.5rem;
     font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--forest);
+    color: var(--accent);
   }
 
-  .card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; box-shadow: 0 1px 2px rgba(12,15,14,0.04), 0 8px 24px -12px rgba(12,15,14,0.08); }
+  .card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; box-shadow: 0 1px 2px rgba(23,35,68,0.04), 0 10px 30px -18px rgba(23,35,68,0.18); }
   .card-night { background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.015)); border: 1px solid var(--night-rule); border-radius: 14px; }
   .chip { display: inline-flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); border-radius: 999px; padding: 0.3rem 0.7rem; font-size: 12px; background: var(--sheet); }
 
-  .grid-bg {
-    background-image: linear-gradient(var(--night-rule) 1px, transparent 1px), linear-gradient(90deg, var(--night-rule) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 30%, transparent 75%);
-  }
-  .grid-bg-light {
-    background-image: linear-gradient(var(--rule) 1px, transparent 1px), linear-gradient(90deg, var(--rule) 1px, transparent 1px);
-    background-size: 44px 44px;
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
-  }
-  .glow { background: radial-gradient(700px 340px at 50% 0%, rgba(25,169,113,0.25), transparent 70%); }
 
   .ink-link {
     background-image: linear-gradient(currentColor, currentColor); background-size: 0% 1px; background-position: 0 100%; background-repeat: no-repeat;
@@ -108,15 +103,15 @@ body {
     font-size: 0.875rem; font-weight: 500; background: var(--sheet); color: var(--ink);
     transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background-color 0.25s, border-color 0.25s;
   }
-  .btn:hover { transform: translateY(-1px); border-color: var(--ink); box-shadow: 0 6px 16px -8px rgba(12,15,14,0.35); }
+  .btn:hover { transform: translateY(-1px); border-color: var(--ink); box-shadow: 0 8px 20px -12px rgba(23,35,68,0.45); }
   .btn:active { transform: translateY(0); }
   .btn .arrow { transition: transform 0.35s var(--ease); }
   .btn:hover .arrow { transform: translateX(3px); }
   .btn-solid { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .btn-solid:hover { background: #1b221f; }
-  .btn-green { background: var(--forest-2); color: #04150d; border-color: transparent; font-weight: 600; box-shadow: 0 0 0 1px rgba(25,169,113,0.4), 0 10px 30px -10px rgba(25,169,113,0.6); }
-  .btn-green:hover { background: #1fc283; border-color: transparent; box-shadow: 0 0 0 1px rgba(25,169,113,0.5), 0 14px 34px -10px rgba(25,169,113,0.75); }
-  .btn-ghost-night { background: rgba(255,255,255,0.04); color: #e8ece9; border-color: rgba(255,255,255,0.14); }
+  .btn-solid:hover { background: #22325e; }
+  .btn-green { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 500; }
+  .btn-green:hover { background: #cf4426; border-color: #cf4426; box-shadow: 0 10px 24px -12px rgba(228,80,47,0.6); }
+  .btn-ghost-night { background: transparent; color: #f6f4f2; border-color: rgba(246,244,242,0.3); }
   .btn-ghost-night:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
 
   /* ── Motion ── */
