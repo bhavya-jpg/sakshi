@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { EXPLORER } from "@/lib/config"
+import { EXPLORER, WITNESSES } from "@/lib/config"
 import { ago, useBlock, useSnapshot } from "@/lib/snapshot"
 
 const kindStyle = {
@@ -13,7 +13,9 @@ const kindStyle = {
 export function LiveStats() {
   const { data, error } = useSnapshot()
   const block = useBlock()
-  const witnesses = data ? new Set(data.observations.map((o) => o.creator.toLowerCase())).size : null
+  // distinct configured witness wallets that have written observations (anyone can write to the project, so others are not counted)
+  const configured = new Set(WITNESSES.map((w) => w.address.toLowerCase()))
+  const witnesses = data ? new Set(data.observations.map((o) => o.creator.toLowerCase()).filter((c) => configured.has(c))).size : null
   const urls = data ? new Set(data.observations.map((o) => o.urlKey)).size : null
   const stats = [
     { k: "Latest block", v: block ? `#${block.toLocaleString("en-US")}` : "—", live: true },

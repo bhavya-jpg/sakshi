@@ -13,14 +13,18 @@ A record does **not** prove that the witness fetched honestly (there is no TLS p
 | Address | Role | Status |
 |---|---|---|
 | [`0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa`](https://tiramisu.explorer.arkiv.network/address/0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa) | Witness A: creates `observation` and `run` (also ran `scripts/preflight.ts`) | active since 19 Oct 2026, 00:15 IST |
+| [`0x077436BD0DF0A9050e8f6be74ee9dEF58A8E7AdA`](https://tiramisu.explorer.arkiv.network/address/0x077436BD0DF0A9050e8f6be74ee9dEF58A8E7AdA) | Witness B: creates `observation` and `run` | active since 19 Oct 2026, 01:42 IST; funded with 0.01 GLM from A |
+
+A and B are **distinct witness identities** (separate keys and wallets) operated by the same team. They are not independent organisations.
 
 ## On-chain evidence (Tiramisu)
-Witness runs against the demo board, `https://bhavya-jpg.github.io/sakshi/board/notice-{1,2,3}.pdf`:
+Witness runs against the demo board (A twice, B once), `https://bhavya-jpg.github.io/sakshi/board/notice-{1,2,3}.pdf`:
 
 | Run | Board phase | Transaction | What it wrote |
 |---|---|---|---|
 | 1 · 19 Oct 00:15 IST | 1 | [`0x7707c7e1…1745`](https://tiramisu.explorer.arkiv.network/tx/0x7707c7e1c68b65127c5d46b2225be787a19a7faef5af88c1b12fc2f2eec51745) | `seen` ×3 + `run` |
 | 2 · 19 Oct 00:17 IST | 2 | [`0x6969dab4…c519`](https://tiramisu.explorer.arkiv.network/tx/0x6969dab4b65b72853304c36fe7679007cd5f2c4aa5bdc06ff9e24342232fc519) | `changed` (notice 2) + `gone` (notice 3) + `run`, plus a Lifetime Extension of notice 1's `seen` |
+| B1 · 19 Oct 01:42 IST | 2 | [`0xbab0f459…9d4f`](https://tiramisu.explorer.arkiv.network/tx/0xbab0f4599b2afc706e640e519d9921d6b9259a88421e17f8c447277f160a9d4f) | Witness B: `seen` (notice 1) + `run` |
 
 Example entities:
 | Entity key | Type | Meaning |
@@ -31,6 +35,7 @@ Example entities:
 | `0x4b6e75fc6dac4bbd35a0cfacf2b586a2123fe46451b4574986b39d6e9ff634ee` | observation `seen` | notice 3 served `0x7d4de10e…6e61` |
 | `0x67acc4d5242d98710ca8d817ed5a876ebda1d716e0d784c074e756daa3462696` | observation `gone` | notice 3 returned HTTP 404 |
 | `0x989289eada88a62e74fef32070c51e37367ca4f6c4dd4ff763a00a3a1d063925` | run | run 1 summary |
+| `0x52ca1acceb714cec3c48d7fd7e21ebcb7abaeaab30723a81b62c06804fe651eb` | observation `seen` | Witness B: notice 1 serves `0xedfaad04…a397`, the same file A saw, so it is now seen by 2 witness identities |
 
 The preflight test also left one synthetic `observation` (`0xa61a7141…e0e5`, URL `https://sakshi.example/preflight/…`, `source_tier = demo`) and one `entity_type = "preflight"` entity under the same project.
 

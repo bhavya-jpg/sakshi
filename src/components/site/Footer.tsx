@@ -15,7 +15,7 @@ const cols = [
   ] },
   { title: "Network", links: [
     { label: "Arkiv docs", href: "https://docs.arkiv.network", ext: true }, { label: "Block explorer", href: EXPLORER, ext: true },
-    { label: "Witness A wallet", href: `${EXPLORER}/address/${WITNESSES[0].address}`, ext: true }, { label: "Arkiv status", href: "https://status.arkiv.network", ext: true },
+    ...WITNESSES.map((w) => ({ label: `${w.label.replace("Sakshi ", "")} wallet`, href: `${EXPLORER}/address/${w.address}`, ext: true })), { label: "Arkiv status", href: "https://status.arkiv.network", ext: true },
   ] },
 ]
 

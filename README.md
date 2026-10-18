@@ -8,7 +8,7 @@ Anyone can drop a PDF into the web app and see whether a witness they trust reco
 - **Schema:** [`/arkiv/schema.md`](arkiv/schema.md) · **Friction report:** [`/arkiv/friction.md`](arkiv/friction.md)
 - **Network:** Tiramisu testnet (chain id 7738577) · SDK `@arkiv-network/sdk@0.8.1`
 
-> **Status (19 Oct 2026, 00:20 IST):** live on Tiramisu. Witness A (`0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa`) has run twice against the demo board (phase 1, then phase 2), and the live site returns Served / Replaced / Removed / No matching record for the sample files. Transactions and entity keys are in [`/arkiv/schema.md`](arkiv/schema.md#on-chain-evidence-tiramisu). The board currently serves **phase 2**.
+> **Status (19 Oct 2026, 01:45 IST):** live on Tiramisu with **two witness identities**: A (`0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa`, two runs against the demo board) and B (`0x077436BD0DF0A9050e8f6be74ee9dEF58A8E7AdA`, one run, notice 1). They are separate keys and wallets operated by the same team, not independent organisations. The live site returns Served / Replaced / Removed / No matching record for the sample files, and notice 1 shows **2 witnesses** until you untick one. Transactions and entity keys are in [`/arkiv/schema.md`](arkiv/schema.md#on-chain-evidence-tiramisu). The board currently serves **phase 2**.
 
 ## What is where
 | Path | What |
@@ -43,6 +43,12 @@ cp .env.example .env     # put a funded Tiramisu key in WITNESS_A_PRIVATE_KEY (n
 npx tsx scripts/preflight.ts                 # integration test
 npx tsx scripts/witness.ts --dry-run         # fetch + diff, print the batch, write nothing
 npx tsx scripts/witness.ts                   # one witness pass over sources.json
+npx tsx scripts/fund.ts --to 0xNewWitness    # dry run: sender, recipient, chain, amount, gas
+npx tsx scripts/fund.ts --to 0xNewWitness --amount 0.01 --send
+```
+A second witness keeps its key in its own gitignored file and is selected with `--key-env`:
+```bash
+(set -a; . ./.env.witness-b; set +a; npx tsx scripts/witness.ts --key-env WITNESS_B_PRIVATE_KEY --label "Sakshi witness B")
 ```
 Keys are only ever read by the CLI on your machine. The web app has no write path.
 

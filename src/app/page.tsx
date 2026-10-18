@@ -25,7 +25,7 @@ const verdicts = [
 const faq = [
   ["Does Sakshi tell me if a document is fake?", "No. It tells you what independent witnesses recorded: whether this exact file was served by a URL, and when. A missing record only means nobody you trust recorded it."],
   ["Is my PDF uploaded anywhere?", "No. Your browser computes the SHA-256 locally and sends only that fingerprint in a public query. The file never leaves your device."],
-  ["Who are the witnesses?", "Anyone who runs the open-source witness with their own wallet. In this hackathon build, the one active witness is operated by the Sakshi team, and you can untick it."],
+  ["Who are the witnesses?", "Anyone who runs the open-source witness with their own wallet. This build has two witness identities, A and B: separate keys and wallets, both operated by the Sakshi team, so they are distinct identities, not independent organisations. You can untick either one."],
   ["Why Arkiv instead of a normal database?", "Records are readonly, timestamped by the chain, attributed to the wallet that wrote them, and queryable by anyone without our server. We cannot quietly edit or delete them."],
   ["Is the demo board a real government site?", "No. It is a clearly labelled mock publisher with synthetic notices, so anyone can reproduce a change and a removal end to end."],
 ]

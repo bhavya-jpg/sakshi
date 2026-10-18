@@ -87,7 +87,12 @@ Shortly before 00:15 IST on 19 Oct, the team received 10 test GLM on `0xCB16Ca34
 - **What we changed:** the landing page went from about 18 queries per load to 3 (one shared snapshot; the hero demo computes verdicts from it with the same pure function as `/verify`). We select only the fields we read (`select({ key, creator, createdAt, expiresAt, attributes, payload })`), cache the snapshot for 2 minutes in `sessionStorage`, and pause the block poller in hidden tabs.
 - **Repro:** run many `select().where(eq("project", str("sakshi-v1"))).fetch()` calls from one IP in a short burst (we did it with about 15 page loads of an earlier build of our landing page) and read the `ratelimit` response header on the 429. We did not measure the per-query `Arkiv-Cost`, because our budget was already at 0.
 
-### 12. Explorer URL patterns
+### 12. Second witness identity: funding by plain transfer, write in one batch
+- 19 Oct, 01:41–01:42 IST. A new key was generated locally (address `0x077436BD0DF0A9050e8f6be74ee9dEF58A8E7AdA`) and funded with 0.01 GLM from Witness A by a plain transfer: `scripts/fund.ts`, 21,000 gas at 1 gwei, tx [`0x8ef2…be85`](https://tiramisu.explorer.arkiv.network/tx/0x8ef2278c768cfdaf7ab20a9394f36fb66cda66115af2be88ad3cc1d4bc9fbe85). No faucet involved.
+- B's first witness batch (1 observation + 1 run) used 247,344 gas (≈0.00025 GLM), tx [`0xbab0…9d4f`](https://tiramisu.explorer.arkiv.network/tx/0xbab0f4599b2afc706e640e519d9921d6b9259a88421e17f8c447277f160a9d4f). Read-back: `creator` = B, payload `witness_label` = "Sakshi witness B". `eq("doc_sha256", bytes32(h))` for sample 1 now returns 2 rows from 2 creators.
+- **Worked as expected; nothing to fix.** Trust stays on `$creator`: the app counts distinct creator addresses (lowercased), not records.
+
+### 13. Explorer URL patterns
 `https://tiramisu.explorer.arkiv.network/tx/<hash>` and `/address/<addr>` both return 200. These are the patterns we link to from the app.
 
 ## Not tested

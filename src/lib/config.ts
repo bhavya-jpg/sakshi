@@ -15,4 +15,6 @@ export type Witness = { address: `0x${string}`; label: string }
 // Filled with real addresses once they have written to Tiramisu.
 export const WITNESSES: Witness[] = [
   { address: "0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa", label: "Sakshi witness A" },
+  // A second witness identity (separate key and wallet), operated by the same team as A.
+  { address: "0x077436BD0DF0A9050e8f6be74ee9dEF58A8E7AdA", label: "Sakshi witness B" },
 ]

@@ -149,3 +149,53 @@ describe("backward compatibility: single witness", () => {
     expect(selectWitnessRuns(rs, [])).toEqual([])
   })
 })
+
+describe("configured witnesses A and B (shape of the real Tiramisu records)", async () => {
+  const { WITNESSES } = await import("../src/lib/config")
+  const [WA, WB] = WITNESSES.map((w) => w.address)
+  const N1 = `0x${"31".repeat(32)}` as const, N2 = `0x${"32".repeat(32)}` as const
+  const S1 = `0x${"e1".repeat(32)}` as const, S2v1 = `0x${"e2".repeat(32)}` as const, S2v2 = `0x${"e3".repeat(32)}` as const
+  const all = [
+    obs({ creator: WA, urlKey: N1, docSha256: S1, fetchedAt: 1000 }),
+    obs({ creator: WA, urlKey: N2, docSha256: S2v1, fetchedAt: 1000 }),
+    obs({ creator: WA, urlKey: N2, kind: "changed", docSha256: S2v2, prevSha256: S2v1, fetchedAt: 1100 }),
+    obs({ creator: WB, urlKey: N1, docSha256: S1, fetchedAt: 5000 }),
+  ]
+  const runs = [run(WA, 1100), run(WB, 5000)]
+  const ev = (h: `0x${string}`) => evidenceFrom(h, all, runs, [WA, WB])
+
+  it("config lists two distinct witness identities", () => {
+    expect(WITNESSES).toHaveLength(2)
+    expect(new Set(WITNESSES.map((w) => w.address.toLowerCase())).size).toBe(2)
+  })
+  it("both trusted: sample 1 is SERVED by 2 distinct witnesses", () => {
+    const v = verdictFromEvidence(ev(S1), [WA, WB])
+    expect(v.overall).toBe("SERVED")
+    expect(v.witnesses).toHaveLength(2)
+  })
+  it("only A trusted: 1 witness, B's record is ignored, not counted", () => {
+    const v = verdictFromEvidence(ev(S1), [WA])
+    expect(v.witnesses).toEqual([WA.toLowerCase()])
+    expect(v.ignored).toBe(1)
+  })
+  it("only B trusted: still SERVED, by B alone", () => {
+    const v = verdictFromEvidence(ev(S1), [WB])
+    expect(v.overall).toBe("SERVED")
+    expect(v.witnesses).toEqual([WB.toLowerCase()])
+  })
+  it("a file only A saw (notice 2 v1) is REPLACED with A, and NOT_SEEN when only B is trusted", () => {
+    expect(verdictFromEvidence(ev(S2v1), [WA, WB]).overall).toBe("REPLACED")
+    expect(verdictFromEvidence(ev(S2v1), [WA, WB]).witnesses).toHaveLength(1)
+    expect(verdictFromEvidence(ev(S2v1), [WB]).overall).toBe("NOT_SEEN")
+  })
+  it("lowercase and checksummed forms of the same addresses are the same identities", () => {
+    const v = verdictFromEvidence(ev(S1), [WA.toLowerCase(), WB.toLowerCase()])
+    expect(v).toEqual(verdictFromEvidence(ev(S1), [WA, WB]))
+  })
+  it("a wallet outside the fetched set cannot be trusted silently", () => {
+    expect(() => verdictFromEvidence(ev(S1), [WA, X])).toThrow(/not fetched/)
+  })
+  it("snapshot path agrees with the verify path for A+B", () => {
+    expect(verdictFromSnapshot({ observations: all, runs }, S1, [WA, WB])).toEqual(verdictFromEvidence(ev(S1), [WA, WB]))
+  })
+})
