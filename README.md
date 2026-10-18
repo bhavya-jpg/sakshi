@@ -8,7 +8,7 @@ Anyone can drop a PDF into the web app and see whether a witness they trust reco
 - **Schema:** [`/arkiv/schema.md`](arkiv/schema.md) · **Friction report:** [`/arkiv/friction.md`](arkiv/friction.md)
 - **Network:** Tiramisu testnet (chain id 7738577) · SDK `@arkiv-network/sdk@0.8.1`
 
-> **Status (18 Oct 2026, 23:00 IST):** the web app, CLIs, and demo board are built and deployed. No Sakshi entities have been written yet: the only documented way to get test GLM (the Hub faucet) crashes on load. See [friction.md item 1](arkiv/friction.md). Until a witness writes records, every lookup correctly shows "No matching record".
+> **Status (19 Oct 2026, 00:20 IST):** live on Tiramisu. Witness A (`0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa`) has run twice against the demo board (phase 1, then phase 2), and the live site returns Served / Replaced / Removed / No matching record for the sample files. Transactions and entity keys are in [`/arkiv/schema.md`](arkiv/schema.md#on-chain-evidence-tiramisu). The board currently serves **phase 2**.
 
 ## What is where
 | Path | What |
@@ -54,7 +54,7 @@ The demo board at `/board/` serves **synthetic, clearly labelled** notices at st
 Steps:
 1. Deploy with phase 1 and run `npx tsx scripts/witness.ts` → three `seen` observations and one `run`, in one transaction.
 2. Set the repo variable `BOARD_PHASE=2` (`gh variable set BOARD_PHASE --body 2`), redeploy, and run the witness again → `changed` for notice 2, `gone` for notice 3, an extension for notice 1, and one `run`.
-3. On the verify page, drop each file from `public/samples/`:
+3. On `/verify/`, click **Examine** next to each specimen (or drop the file from `public/samples/`):
    - `demo-notice-1-v1.pdf` → **Served**
    - `demo-notice-2-v1.pdf` → **Replaced**
    - `demo-notice-2-v2.pdf` → **Served**

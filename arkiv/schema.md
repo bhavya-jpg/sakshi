@@ -12,7 +12,27 @@ A record does **not** prove that the witness fetched honestly (there is no TLS p
 ## Witness wallets
 | Address | Role | Status |
 |---|---|---|
-| `0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa` | Witness A: creates `observation` and `run` | not yet funded (see friction.md item 1); no entities written yet |
+| [`0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa`](https://tiramisu.explorer.arkiv.network/address/0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa) | Witness A: creates `observation` and `run` (also ran `scripts/preflight.ts`) | active since 19 Oct 2026, 00:15 IST |
+
+## On-chain evidence (Tiramisu)
+Witness runs against the demo board, `https://bhavya-jpg.github.io/sakshi/board/notice-{1,2,3}.pdf`:
+
+| Run | Board phase | Transaction | What it wrote |
+|---|---|---|---|
+| 1 · 19 Oct 00:15 IST | 1 | [`0x7707c7e1…1745`](https://tiramisu.explorer.arkiv.network/tx/0x7707c7e1c68b65127c5d46b2225be787a19a7faef5af88c1b12fc2f2eec51745) | `seen` ×3 + `run` |
+| 2 · 19 Oct 00:17 IST | 2 | [`0x6969dab4…c519`](https://tiramisu.explorer.arkiv.network/tx/0x6969dab4b65b72853304c36fe7679007cd5f2c4aa5bdc06ff9e24342232fc519) | `changed` (notice 2) + `gone` (notice 3) + `run`, plus a Lifetime Extension of notice 1's `seen` |
+
+Example entities:
+| Entity key | Type | Meaning |
+|---|---|---|
+| `0x9d2d6d533d5a57b8ba385270507c41922fbda002c32d976a09ed63dc88f8fd42` | observation `seen` | notice 1 serves `0xedfaad04…a397`; extended in run 2 |
+| `0x09ab88cd3eb609ee9c9d6758ea6266856277cbe36e4b9ff1107b540d6438745c` | observation `seen` | notice 2 served `0x1a89d92e…6c5a` (v1) |
+| `0xde3d2faa8ea128156f65b0031b05dcf80652ddf8b837c11e7e523c6b04bfdd14` | observation `changed` | notice 2 now serves `0xcc807160…6e06` (v2) |
+| `0x4b6e75fc6dac4bbd35a0cfacf2b586a2123fe46451b4574986b39d6e9ff634ee` | observation `seen` | notice 3 served `0x7d4de10e…6e61` |
+| `0x67acc4d5242d98710ca8d817ed5a876ebda1d716e0d784c074e756daa3462696` | observation `gone` | notice 3 returned HTTP 404 |
+| `0x989289eada88a62e74fef32070c51e37367ca4f6c4dd4ff763a00a3a1d063925` | run | run 1 summary |
+
+The preflight test also left one synthetic `observation` (`0xa61a7141…e0e5`, URL `https://sakshi.example/preflight/…`, `source_tier = demo`) and one `entity_type = "preflight"` entity under the same project.
 
 ## Entity types
 All entities: `contentType: application/json`, creation flags `readonly: true` and `permissionlessExtension: true`, plus these common attributes:

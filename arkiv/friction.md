@@ -62,8 +62,27 @@ Format per item: **surface · expected · actual · versions · repro · suggest
 
 ---
 
-## Not yet tested (blocked on item 1)
-- Creating an entity; `bytes32` equality and `u64` range queries returning a matching row; `executeBatch` with `creates` + `extensions` in one transaction; Lifetime Extension semantics; time to first entity.
+## Writes (after funding)
+
+### 8. Funding resolved outside the faucet
+Shortly before 00:15 IST on 19 Oct, the team received 10 test GLM on `0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa` as a direct transfer, not through the faucet (balance `10000000000000000000` wei, checked 00:15 IST). Building started 21:28 IST on 18 Oct, and the first entity landed 00:15:29 IST on 19 Oct (about 2 h 47 min, almost all of it spent waiting for funds).
+
+### 9. Preflight integration test: all 17 checks pass (`scripts/preflight.ts`, 19 Oct 00:15 IST, 16.1 s total)
+- `createEntity` with `bytes32`, `u64`, `i32` and `str` attributes, a JSON payload, `fromDays(30)` and `{ readonly, permissionlessExtension }`. The call returned after the receipt, about 7.9 s (tx [`0xb3aa…4f04`](https://tiramisu.explorer.arkiv.network/tx/0xb3aaa9a9aa20b04b1617e1337e244899060a9f6f16c6861c481e5e757efb4f04), block 749680, entity `0xa61a…e0e5`).
+- `getEntity`: `creator` equals the wallet, the payload round-trips byte-for-byte, `fetched_at` comes back typed `u64`, flags `{"readonly":true,"permissionlessExtension":true,"raw":3}`.
+- `eq("doc_sha256", bytes32(h))` + project + type → exactly 1 row. `eq(url_key) + gte("fetched_at", u64) + createdBy(wallet)` → 1 row. The same query `createdBy(0x…dEaD)` → 0 rows. So `bytes32` equality and `u64` ranges work as documented; no fallback was needed.
+- `executeBatch({ creates: [1], extensions: [{ fromDays(31) }] })`: one transaction ([`0x20db…d5b`](https://tiramisu.explorer.arkiv.network/tx/0x20db0619dbac00452b4e795bc6bb9efad11d9f9ee6e4b920b95b6a96639d4d5b)), `expiresAt` went 2045680 → 2088884 (+43,204 blocks ≈ 1 day at 2 s, as expected).
+- **Note:** `fromDays(30)` resolved to block 2045680 from block 749680, which is exactly 1,296,000 blocks. Expiry depends on block production staying at 2 s, as the SDK source warns.
+
+### 10. Witness runs: one `executeBatch` per run, all with mixed operations
+- Run 1 (board phase 1): 3 creates + 1 run in one tx ([`0x7707…1745`](https://tiramisu.explorer.arkiv.network/tx/0x7707c7e1c68b65127c5d46b2225be787a19a7faef5af88c1b12fc2f2eec51745)).
+- Run 2 (board phase 2, about 2 min later): 2 creates (`changed`, `gone`) + 1 run + 1 extension in one tx ([`0x6969…c519`](https://tiramisu.explorer.arkiv.network/tx/0x6969dab4b65b72853304c36fe7679007cd5f2c4aa5bdc06ff9e24342232fc519)).
+- **Pitfall we designed around:** an extension reverts if the new expiry is not later than the current one, and one revert fails the whole batch. `witness.ts` therefore only adds an extension when `currentBlock + 30 days` exceeds the entity's `expiresAt`. Here notice 1's `seen` (created at block 749695, expiring 2045695) was extended to 2045749 in run 2 at block 749749: only +54 blocks, because a fixed-length extension re-anchors at the current block. It went through. Gas used: run 1 = 519,168, run 2 = 397,256.
+
+### 11. Explorer URL patterns
+`https://tiramisu.explorer.arkiv.network/tx/<hash>` and `/address/<addr>` both return 200. These are the patterns we link to from the app.
+
+## Not tested
 - Uppercase attribute names on chain (the SDK regex allows `[A-Za-z]`; reported to be rejected on chain). We use lowercase names only and have not tested this.
 
 ## The one thing Arkiv should improve first
