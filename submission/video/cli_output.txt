@@ -1,0 +1,16 @@
+run at 01:59:13 IST
+$ npx tsx scripts/verify.ts public/samples/demo-notice-2-v1.pdf
+file      public/samples/demo-notice-2-v1.pdf
+sha256    0x1a89d92e6a8fc8430aa495c255b88d2b109fa95736dd2026c226316408566c5a
+trusting  0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa, 0x077436BD0DF0A9050e8f6be74ee9dEF58A8E7AdA
+verdict   REPLACED  (Replaced · बदला गया)
+          This exact file was served at the URL below, and the URL later started serving a different file.
+
+  REPLACED  [DEMO SOURCE]
+  url             https://bhavya-jpg.github.io/sakshi/board/notice-2.pdf
+  witness         0xcb16ca347dc560fdca8891fb66077bd18a4e3bfa
+  first seen      2026-10-18T18:45:51Z
+  last confirmed  2026-10-18T18:45:51Z
+  replaced        2026-10-18T18:47:38Z  by 0xcc807160895416f707598ca9c31865c603ccd106ed607146e7990c9c25466e06
+    2026-10-18T18:45:51Z  seen    0x1a89d92e6a8fc8430aa495c255b88d2b109fa95736dd2026c226316408566c5a  entity 0x09ab88cd3eb609ee9c9d6758ea6266856277cbe36e4b9ff1107b540d6438745c
+    2026-10-18T18:47:38Z  changed 0xcc807160895416f707598ca9c31865c603ccd106ed607146e7990c9c25466e06  entity 0xde3d2faa8ea128156f65b0031b05dcf80652ddf8b837c11e7e523c6b04bfdd14

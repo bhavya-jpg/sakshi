@@ -1,0 +1,206 @@
+{
+ "total": 165.724,
+ "scenes": [
+  {
+   "scene": 1,
+   "start": 0,
+   "duration": 20.048
+  },
+  {
+   "scene": 2,
+   "start": 20.048,
+   "duration": 18.674
+  },
+  {
+   "scene": 3,
+   "start": 38.722,
+   "duration": 15.68
+  },
+  {
+   "scene": 4,
+   "start": 54.403,
+   "duration": 29.967
+  },
+  {
+   "scene": 5,
+   "start": 84.37,
+   "duration": 27.63
+  },
+  {
+   "scene": 6,
+   "start": 112,
+   "duration": 16.511
+  },
+  {
+   "scene": 7,
+   "start": 128.511,
+   "duration": 11.503
+  },
+  {
+   "scene": 8,
+   "start": 140.014,
+   "duration": 13.569
+  },
+  {
+   "scene": 9,
+   "start": 153.583,
+   "duration": 12.141
+  }
+ ],
+ "cues": [
+  {
+   "scene": 1,
+   "file": "narration/s1_0.aiff",
+   "start": 2.2,
+   "end": 6.026,
+   "text": "Public notices can change. Documents can disappear."
+  },
+  {
+   "scene": 1,
+   "file": "narration/s1_1.aiff",
+   "start": 6.626,
+   "end": 12.444,
+   "text": "And after the fact, it can be difficult to establish which version was actually observed."
+  },
+  {
+   "scene": 1,
+   "file": "narration/s1_2.aiff",
+   "start": 13.044,
+   "end": 18.648,
+   "text": "Sakshi creates a verifiable record of document observations, using Arkiv."
+  },
+  {
+   "scene": 2,
+   "file": "narration/s2_0.aiff",
+   "start": 20.948,
+   "end": 27.248,
+   "text": "Sakshi is an independent witness archive for public recruitment and examination notices."
+  },
+  {
+   "scene": 2,
+   "file": "narration/s2_1.aiff",
+   "start": 27.848,
+   "end": 35.322,
+   "text": "It records document observations on-chain, and lets anyone compare a file against the evidence that was recorded."
+  },
+  {
+   "scene": 3,
+   "file": "narration/s3_0.aiff",
+   "start": 39.522,
+   "end": 46.533,
+   "text": "This demonstration uses synthetic notices, so we can reproduce changes and removals consistently."
+  },
+  {
+   "scene": 3,
+   "file": "narration/s3_1.aiff",
+   "start": 47.133,
+   "end": 51.403,
+   "text": "The evidence records themselves are real Arkiv Tiramisu records."
+  },
+  {
+   "scene": 4,
+   "file": "narration/s4_0.aiff",
+   "start": 55.203,
+   "end": 61.213,
+   "text": "Sakshi hashes the supplied document on your device, and checks for a matching observation."
+  },
+  {
+   "scene": 4,
+   "file": "narration/s4_1.aiff",
+   "start": 61.813,
+   "end": 65.665,
+   "text": "A matching hash identifies recorded evidence for that file."
+  },
+  {
+   "scene": 4,
+   "file": "narration/s4_2.aiff",
+   "start": 66.265,
+   "end": 71.721,
+   "text": "A changed hash shows that the files differ, and a removed notice is reported as removed."
+  },
+  {
+   "scene": 4,
+   "file": "narration/s4_3.aiff",
+   "start": 72.321,
+   "end": 79.37,
+   "text": "And if no qualifying record is found, Sakshi reports that limitation, rather than inventing certainty."
+  },
+  {
+   "scene": 5,
+   "file": "narration/s5_0.aiff",
+   "start": 85.17,
+   "end": 88.335,
+   "text": "Sakshi supports multiple witness identities."
+  },
+  {
+   "scene": 5,
+   "file": "narration/s5_1.aiff",
+   "start": 88.935,
+   "end": 93.04,
+   "text": "For this notice, both addresses have matching observations."
+  },
+  {
+   "scene": 5,
+   "file": "narration/s5_2.aiff",
+   "start": 93.64,
+   "end": 100.081,
+   "text": "Excluding witness B leaves one trusted witness. Excluding both leaves no qualifying observation."
+  },
+  {
+   "scene": 5,
+   "file": "narration/s5_3.aiff",
+   "start": 100.681,
+   "end": 108.4,
+   "text": "Both addresses are operated by the same team, so they are distinct identities, not independent organisations."
+  },
+  {
+   "scene": 6,
+   "file": "narration/s6_0.aiff",
+   "start": 112.8,
+   "end": 116.118,
+   "text": "The timeline makes document changes observable."
+  },
+  {
+   "scene": 6,
+   "file": "narration/s6_1.aiff",
+   "start": 116.718,
+   "end": 124.111,
+   "text": "It records what was observed, and when, without pretending that a hash alone establishes intent or authenticity."
+  },
+  {
+   "scene": 7,
+   "file": "narration/s7_0.aiff",
+   "start": 129.311,
+   "end": 136.414,
+   "text": "The same verification is available from the command line, so the evidence can be inspected outside the browser."
+  },
+  {
+   "scene": 8,
+   "file": "narration/s8_0.aiff",
+   "start": 140.814,
+   "end": 144.201,
+   "text": "These observations are recorded on Arkiv Tiramisu."
+  },
+  {
+   "scene": 8,
+   "file": "narration/s8_1.aiff",
+   "start": 144.801,
+   "end": 150.383,
+   "text": "The transaction and creator can be inspected independently of the Sakshi interface."
+  },
+  {
+   "scene": 9,
+   "file": "narration/s9_0.aiff",
+   "start": 154.483,
+   "end": 159.646,
+   "text": "Sakshi makes document observations verifiable, and changes traceable."
+  },
+  {
+   "scene": 9,
+   "file": "narration/s9_1.aiff",
+   "start": 160.246,
+   "end": 162.924,
+   "text": "It gives people evidence they can inspect."
+  }
+ ]
+}

@@ -1,0 +1,107 @@
+1
+00:00:02,200 --> 00:00:06,026
+Public notices can change.
+Documents can disappear.
+
+2
+00:00:06,626 --> 00:00:12,444
+And after the fact, it can be difficult to
+establish which version was actually observed.
+
+3
+00:00:13,044 --> 00:00:18,648
+Sakshi creates a verifiable record of
+document observations, using Arkiv.
+
+4
+00:00:20,948 --> 00:00:27,248
+Sakshi is an independent witness archive for
+public recruitment and examination notices.
+
+5
+00:00:27,848 --> 00:00:35,322
+It records document observations on-chain, and lets anyone
+compare a file against the evidence that was recorded.
+
+6
+00:00:39,522 --> 00:00:46,533
+This demonstration uses synthetic notices, so we can
+reproduce changes and removals consistently.
+
+7
+00:00:47,133 --> 00:00:51,403
+The evidence records themselves are
+real Arkiv Tiramisu records.
+
+8
+00:00:55,203 --> 00:01:01,213
+Sakshi hashes the supplied document on your
+device, and checks for a matching observation.
+
+9
+00:01:01,813 --> 00:01:05,665
+A matching hash identifies
+recorded evidence for that file.
+
+10
+00:01:06,265 --> 00:01:11,721
+A changed hash shows that the files differ, and
+a removed notice is reported as removed.
+
+11
+00:01:12,321 --> 00:01:19,370
+And if no qualifying record is found, Sakshi reports
+that limitation, rather than inventing certainty.
+
+12
+00:01:25,170 --> 00:01:28,335
+Sakshi supports multiple witness identities.
+
+13
+00:01:28,935 --> 00:01:33,040
+For this notice, both addresses
+have matching observations.
+
+14
+00:01:33,640 --> 00:01:40,081
+Excluding witness B leaves one trusted witness.
+Excluding both leaves no qualifying observation.
+
+15
+00:01:40,681 --> 00:01:48,400
+Both addresses are operated by the same team, so they are
+distinct identities, not independent organisations.
+
+16
+00:01:52,800 --> 00:01:56,118
+The timeline makes document
+changes observable.
+
+17
+00:01:56,718 --> 00:02:04,111
+It records what was observed, and when, without pretending
+that a hash alone establishes intent or authenticity.
+
+18
+00:02:09,311 --> 00:02:16,414
+The same verification is available from the command line, so
+the evidence can be inspected outside the browser.
+
+19
+00:02:20,814 --> 00:02:24,201
+These observations are
+recorded on Arkiv Tiramisu.
+
+20
+00:02:24,801 --> 00:02:30,383
+The transaction and creator can be inspected
+independently of the Sakshi interface.
+
+21
+00:02:34,483 --> 00:02:39,646
+Sakshi makes document observations
+verifiable, and changes traceable.
+
+22
+00:02:40,246 --> 00:02:42,924
+It gives people evidence they can inspect.

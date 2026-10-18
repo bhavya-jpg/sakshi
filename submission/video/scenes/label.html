@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"><style>
+html,body{background:transparent!important;width:1920px;height:1080px}
+.chip{position:absolute;left:72px;bottom:64px;display:flex;align-items:center;gap:18px;background:rgba(23,35,68,.94);color:#f6f4f2;border-radius:14px;padding:18px 26px;box-shadow:0 20px 50px -20px rgba(23,35,68,.6)}
+.n{font:500 16px "Geist Mono";letter-spacing:.14em;color:#f3a08c}.t{font:600 26px Geist;letter-spacing:-.02em}.s{font:400 20px "Geist Mono";color:rgba(246,244,242,.7)}
+</style></head><body><div class="chip"><span class="n" id="n"></span><span class="t" id="t"></span><span class="s" id="s"></span></div>
+<script>window.set=(n,t,s)=>{n_=document.getElementById("n");n_.textContent=n;document.getElementById("t").textContent=t;document.getElementById("s").textContent=s};document.fonts.ready.then(()=>{window.__ready=true})</script></body></html>

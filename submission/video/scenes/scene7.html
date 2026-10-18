@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"><style>
+.wrap{position:absolute;left:110px;right:110px;top:96px}
+.term{margin-top:30px;background:#172344;border-radius:22px;padding:34px 40px 40px;box-shadow:0 60px 120px -60px rgba(23,35,68,.6);min-height:760px}
+.dots{display:flex;gap:10px;margin-bottom:26px}.dots i{width:13px;height:13px;border-radius:50%;background:rgba(246,244,242,.18)}
+pre{font:400 15.5px/1.75 "Geist Mono";color:rgba(246,244,242,.86);white-space:pre}
+.p{color:#f3a08c}.v{color:#e8b66b}
+.cap{display:flex;justify-content:space-between;align-items:baseline}
+.cap h2{font:600 54px Geist;letter-spacing:-.04em}.cap h2 em{font:400 italic 58px Newsreader;color:var(--accent)}
+</style></head><body>
+<div class="wrap"><div class="cap in"><h2>From the <em>command line.</em></h2><span class="kicker">Real output · run at 01:59:13 IST · public Tiramisu RPC, no key</span></div>
+<div class="term in" style="animation-delay:.2s"><div class="dots"><i></i><i></i><i></i></div><pre id="out"></pre></div></div>
+<script>
+const L=["$ npx tsx scripts/verify.ts public/samples/demo-notice-2-v1.pdf", "file      public/samples/demo-notice-2-v1.pdf", "sha256    0x1a89d92e6a8fc8430aa495c255b88d2b109fa95736dd2026c226316408566c5a", "trusting  0xCB16Ca347dc560FdCA8891FB66077BD18a4e3bFa, 0x077436BD0DF0A9050e8f6be74ee9dEF58A8E7AdA", "verdict   REPLACED  (Replaced \u00b7 \u092c\u0926\u0932\u093e \u0917\u092f\u093e)", "          This exact file was served at the URL below, and the URL later started serving a different file.", "", "  REPLACED  [DEMO SOURCE]", "  url             https://bhavya-jpg.github.io/sakshi/board/notice-2.pdf", "  witness         0xcb16ca347dc560fdca8891fb66077bd18a4e3bfa", "  first seen      2026-10-18T18:45:51Z", "  last confirmed  2026-10-18T18:45:51Z", "  replaced        2026-10-18T18:47:38Z  by 0xcc807160895416f707598ca9c31865c603ccd106ed607146e7990c9c25466e06", "    2026-10-18T18:45:51Z  seen    0x1a89d92e6a8fc8430aa495c255b88d2b109fa95736dd2026c226316408566c5a  entity 0x09ab88cd3eb609ee9c9d6758ea6266856277cbe36e4b9ff1107b540d6438745c", "    2026-10-18T18:47:38Z  changed 0xcc807160895416f707598ca9c31865c603ccd106ed607146e7990c9c25466e06  entity 0xde3d2faa8ea128156f65b0031b05dcf80652ddf8b837c11e7e523c6b04bfdd14"];
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+function frame(t){
+ // type the command (1.6 s), then reveal output line by line
+ const cmd=L[0],n=Math.max(0,Math.min(cmd.length,Math.floor((t-0.6)/1.6*cmd.length)));
+ let h='<span class="p">'+esc(cmd.slice(0,n))+'</span>'+(n<cmd.length?'▍':'')+'\n';
+ if(t>2.6){const k=Math.min(L.length-1,Math.floor((t-2.6)/0.32));for(let i=1;i<=k;i++){const l=esc(L[i]);h+=(L[i].startsWith("verdict")||L[i].trim().startsWith("REPLACED"))?'<span class="v">'+l+'</span>\n':l+'\n'}}
+ document.getElementById("out").innerHTML=h}
+window.seek=t=>{document.body.classList.add("go");document.getAnimations().forEach(a=>{a.pause();a.currentTime=t*1000});frame(t)};document.fonts.ready.then(()=>{window.__ready=true});
+</script></body></html>

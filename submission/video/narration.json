@@ -1,0 +1,11 @@
+[
+ {"scene":1,"lines":["Public notices can change. Documents can disappear.","And after the fact, it can be difficult to establish which version was actually observed.","Sakshi creates a verifiable record of document observations, using Arkiv."]},
+ {"scene":2,"lines":["Sakshi is an independent witness archive for public recruitment and examination notices.","It records document observations on-chain, and lets anyone compare a file against the evidence that was recorded."]},
+ {"scene":3,"lines":["This demonstration uses synthetic notices, so we can reproduce changes and removals consistently.","The evidence records themselves are real Arkiv Tiramisu records."]},
+ {"scene":4,"lines":["Sakshi hashes the supplied document on your device, and checks for a matching observation.","A matching hash identifies recorded evidence for that file.","A changed hash shows that the files differ, and a removed notice is reported as removed.","And if no qualifying record is found, Sakshi reports that limitation, rather than inventing certainty."]},
+ {"scene":5,"lines":["Sakshi supports multiple witness identities.","For this notice, both addresses have matching observations.","Excluding witness B leaves one trusted witness. Excluding both leaves no qualifying observation.","Both addresses are operated by the same team, so they are distinct identities, not independent organisations."]},
+ {"scene":6,"lines":["The timeline makes document changes observable.","It records what was observed, and when, without pretending that a hash alone establishes intent or authenticity."]},
+ {"scene":7,"lines":["The same verification is available from the command line, so the evidence can be inspected outside the browser."]},
+ {"scene":8,"lines":["These observations are recorded on Arkiv Tiramisu.","The transaction and creator can be inspected independently of the Sakshi interface."]},
+ {"scene":9,"lines":["Sakshi makes document observations verifiable, and changes traceable.","It gives people evidence they can inspect."]}
+]
