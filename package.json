@@ -10,7 +10,9 @@
     "test": "vitest run",
     "witness": "tsx scripts/witness.ts",
     "verify": "tsx scripts/verify.ts",
-    "preflight": "tsx scripts/preflight.ts"
+    "preflight": "tsx scripts/preflight.ts",
+    "prebuild": "node scripts/prepare-board.mjs",
+    "predev": "node scripts/prepare-board.mjs"
   },
   "dependencies": {
     "@arkiv-network/sdk": "0.8.1",

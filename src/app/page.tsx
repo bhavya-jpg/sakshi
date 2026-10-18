@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Verify } from "@/components/Verify"
 import { DemoBadge } from "@/components/VerdictView"
+import { BASE } from "@/lib/base"
 
 const samples = [
   { file: "demo-notice-1-v1.pdf", hint: "still on the demo board" },
@@ -32,7 +33,7 @@ export default function Home() {
         <ul className="mt-3 grid gap-2 sm:grid-cols-2">
           {samples.map((s) => (
             <li key={s.file}>
-              <a className="mono underline" href={`/samples/${s.file}`} download>{s.file}</a>
+              <a className="mono underline" href={`${BASE}/samples/${s.file}`} download>{s.file}</a>
               <span className="text-stone-500"> · {s.hint}</span>
             </li>
           ))}

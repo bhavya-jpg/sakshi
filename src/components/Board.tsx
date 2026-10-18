@@ -1,6 +1,7 @@
 "use client"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { BASE } from "@/lib/base"
 
 const notices = [
   { n: 1, title: "Junior Assistant Recruitment 2026" },
@@ -12,9 +13,9 @@ export function Board() {
   const [origin, setOrigin] = useState("")
   const [status, setStatus] = useState<Record<number, number>>({})
   useEffect(() => {
-    setOrigin(window.location.origin)
+    setOrigin(window.location.origin + BASE)
     notices.forEach(({ n }) =>
-      fetch(`/board/notice-${n}.pdf`, { method: "HEAD", cache: "no-store" }).then((r) => setStatus((s) => ({ ...s, [n]: r.status }))),
+      fetch(`${BASE}/board/notice-${n}.pdf`, { method: "HEAD", cache: "no-store" }).then((r) => setStatus((s) => ({ ...s, [n]: r.status }))),
     )
   }, [])
   return (
@@ -30,7 +31,7 @@ export function Board() {
             </div>
             <div className="flex shrink-0 items-center gap-3 text-xs">
               {status[n] === undefined ? <span className="text-stone-400">checking…</span>
-                : live ? <a className="underline" href={path} target="_blank">Open PDF</a>
+                : live ? <a className="underline" href={BASE + path} target="_blank">Open PDF</a>
                 : <span className="rounded bg-stone-200 px-1.5 py-0.5">HTTP {status[n]} · removed</span>}
               {origin && <Link className="underline" href={`/timeline?u=${encodeURIComponent(origin + path)}`}>Witness record</Link>}
             </div>

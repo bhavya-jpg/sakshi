@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { EXPLORER } from "@/lib/config"
+import { normalizeUrl, urlKey } from "@/lib/hash"
+import { urlTimeline } from "@/lib/service"
 import type { Observation, Run } from "@/lib/schema"
 import { DemoBadge, witnessLabel } from "./VerdictView"
 import { fmtTime, short } from "./format"
@@ -24,8 +26,13 @@ export function Timeline() {
   useEffect(() => {
     if (!u && !k) return
     setBusy(true); setError(null)
-    fetch(`/api/timeline?${k ? `k=${k}` : `u=${encodeURIComponent(u)}`}`)
-      .then(async (r) => { const b = await r.json(); if (!r.ok) throw new Error(b.error); setData(b) })
+    ;(async () => {
+      const url = u ? normalizeUrl(u) : undefined
+      const key = (k || (await urlKey(url!))).toLowerCase() as `0x${string}`
+      if (!/^0x[0-9a-f]{64}$/.test(key)) throw new Error("Not a valid URL key")
+      return { url, ...(await urlTimeline(key)) }
+    })()
+      .then(setData)
       .catch((e) => { setData(null); setError(e.message) })
       .finally(() => setBusy(false))
   }, [u, k])

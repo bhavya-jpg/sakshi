@@ -39,7 +39,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <main className="mx-auto w-full max-w-4xl px-4 py-8 flex-1">{children}</main>
         <footer className="border-t border-stone-200 text-xs text-stone-500">
           <div className="mx-auto max-w-4xl px-4 py-4 flex flex-wrap gap-x-4 gap-y-1">
-            <span>Records are read from Arkiv, the Web3 database (Tiramisu testnet).</span>
+            <span>Your browser reads records directly from Arkiv, the Web3 database (Tiramisu testnet). There is no Sakshi server.</span>
             <span>This site holds no keys and cannot write records.</span>
             <a className="underline" href="https://github.com/bhavya-jpg/sakshi">Source (MIT)</a>
           </div>

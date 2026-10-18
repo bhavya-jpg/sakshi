@@ -2,6 +2,7 @@
 import { useCallback, useState } from "react"
 import { WITNESSES } from "@/lib/config"
 import { sha256Hex } from "@/lib/hash"
+import { verifyHash } from "@/lib/service"
 import type { Verdict } from "@/lib/verdict"
 import { VerdictView } from "./VerdictView"
 
@@ -16,10 +17,8 @@ export function Verify() {
   const check = useCallback(async (hash: string, trust: string[]) => {
     setBusy(true); setError(null)
     try {
-      const res = await fetch(`/api/verify?h=${hash}&w=${trust.join(",")}`)
-      const body = await res.json()
-      if (!res.ok) throw new Error(body.error ?? res.statusText)
-      setVerdict(body)
+      // Read straight from the public Tiramisu RPC, in this browser.
+      setVerdict(await verifyHash(hash as `0x${string}`, trust))
     } catch (e) {
       setVerdict(null)
       setError(`Could not reach Arkiv: ${(e as Error).message}. The file was not uploaded anywhere; try again.`)

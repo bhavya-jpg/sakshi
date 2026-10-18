@@ -1,13 +1,17 @@
 import type { NextConfig } from "next";
 
-// The DEMO board serves stable URLs (/board/notice-N.pdf) whose content depends on the build-time
-// phase: phase 1 = as first published, phase 2 = notice-2 edited and notice-3 removed (404).
-export const BOARD_PHASE = process.env.NEXT_PUBLIC_BOARD_PHASE === "2" ? "2" : "1";
+// Static export: the site is plain files, and the browser queries the public Tiramisu RPC directly.
+// There is no Sakshi backend to take down. NEXT_PUBLIC_BASE_PATH is "/sakshi" on GitHub Pages.
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const nextConfig: NextConfig = {
-  env: { NEXT_PUBLIC_BOARD_PHASE: BOARD_PHASE },
-  async rewrites() {
-    return [{ source: "/board/:file(notice-\\d+\\.pdf)", destination: `/board-files/v${BOARD_PHASE}/:file` }];
+  output: "export",
+  trailingSlash: true,
+  basePath,
+  images: { unoptimized: true },
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+    NEXT_PUBLIC_BOARD_PHASE: process.env.NEXT_PUBLIC_BOARD_PHASE === "2" ? "2" : "1",
   },
 };
 

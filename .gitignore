@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 !.env.example
+
+# generated per build from public/board-files
+/public/board/
+/out/
