@@ -1,3 +1,5 @@
+> **Note (19 Oct 2026):** this is the original build plan, kept for transparency. Some planned items were not built: the pinner wallet and `pin.ts`, the WebSocket live feed, and witnessing real government PDFs. For what actually exists, see `README.md`, `/arkiv/schema.md` and `docs/SUBMISSION.md`.
+
 # CLAUDE.md — Sakshi (साक्षी): an independent witness record of what official notice pages actually served
 
 Arkiv: Global Tour Stop (Devfolio). **Hard deadline: 18 Oct 2026 23:59 BST = 19 Oct 2026 04:29 IST.** Target: submitted by **03:50 IST**.
